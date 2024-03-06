@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes.debug;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.common.GamepadEx;
 import org.firstinspires.ftc.teamcode.common.Log;
-import org.firstinspires.ftc.teamcode.opmodes.subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 @TeleOp(group = "Debug")

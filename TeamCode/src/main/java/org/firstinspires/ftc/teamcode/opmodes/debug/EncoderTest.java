@@ -27,7 +27,6 @@ public class EncoderTest extends LinearOpMode {
 //            expansionHub = allHubs.get(1);
         } else {
             controlHub = allHubs.get(1);
-            FtcDashboard.getInstance().sendTelemetryPacket(new TelemetryPacket());
 //            expansionHub = allHubs.get(0);
         }
 
@@ -42,6 +41,7 @@ public class EncoderTest extends LinearOpMode {
             controlHubData = controlHub.getBulkData();
             double ticks = controlHubData.getMotorCurrentPosition(0);
             log.add("Ticks", ticks);
+            log.add("Time", System.currentTimeMillis());
             log.tick();
         }
     }

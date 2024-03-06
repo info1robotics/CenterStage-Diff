@@ -3,9 +3,8 @@ package org.firstinspires.ftc.teamcode.opmodes.debug;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.common.GamepadEx;
 import org.firstinspires.ftc.teamcode.common.Log;
-import org.firstinspires.ftc.teamcode.opmodes.subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 
 @TeleOp(group = "Debug")
 public class DirectionDebug extends LinearOpMode {
