@@ -10,6 +10,9 @@ import java.util.List;
 public class BulkReader {
     LynxModule controlHub, expansionHub;
     public LynxModule.BulkData controlHubData, expansionHubData;
+
+    double startHangTicks = 0, startLiftTicks = 0, startExtendoTicks = 0;
+
     static BulkReader instance;
     public static BulkReader getInstance() {
         return instance;
@@ -29,6 +32,11 @@ public class BulkReader {
 //        expansionHub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
 
         BulkReader.instance = this;
+
+        read();
+        startExtendoTicks = getExtendoTicks();
+        startHangTicks = getHangTicks();
+        startLiftTicks = getLiftTicks();
     }
 
     public void read() {
@@ -37,14 +45,15 @@ public class BulkReader {
     }
 
     public double getHangTicks() {
-        return controlHubData.getMotorCurrentPosition(-1);
+//        return controlHubData.getMotorCurrentPosition(-1) - startHangTicks;
+        return 0;
     }
 
     public double getLiftTicks() {
-        return controlHubData.getMotorCurrentPosition(-1);
+        return controlHubData.getMotorCurrentPosition(3) - startLiftTicks;
     }
 
     public double getExtendoTicks() {
-        return controlHubData.getMotorCurrentPosition(0);
+        return controlHubData.getMotorCurrentPosition(0) - startExtendoTicks;
     }
 }
