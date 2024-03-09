@@ -19,7 +19,7 @@ public class Differential {
     static double EXTENDO_CORRECTION = 2 / 8000d;
     static double HANG_CORRECTION = 4 / 8000d;
 
-    static double[] LIFT_BOUND = new double[]{-90000, 0};
+    static double[] LIFT_BOUND = new double[]{-50000, 0};
     static double[] EXTENDO_BOUND = new double[]{0, 60000};
 
     DcMotor parallel1, parallel2, perpendicular;
@@ -74,11 +74,11 @@ public class Differential {
     public void outputHang(double power) {
         powers[0] += power;
         powers[1] -= power;
-
     }
 
     public void outputLift(double power) {
         power = -power;
+        if (power < -0.7) power = -0.7;
         powers[0] += power;
         powers[1] += power;
         powers[2] += power;
@@ -164,6 +164,8 @@ public class Differential {
         } else if (BulkReader.getInstance().getExtendoTicks() > EXTENDO_BOUND[1] && extendoPower > 0) {
             extendoPower = 0.0001;
         }
+
+
 
         outputHang(hangPower);
         outputLift(liftPower);
