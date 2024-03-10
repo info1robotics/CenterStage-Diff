@@ -22,14 +22,14 @@ public class BulkReader {
 
         if (allHubs.get(0).isParent()) {
             controlHub = allHubs.get(0);
-//            expansionHub = allHubs.get(1);
+            expansionHub = allHubs.get(1);
         } else {
             controlHub = allHubs.get(1);
-//            expansionHub = allHubs.get(0);
+            expansionHub = allHubs.get(0);
         }
 
         controlHub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-//        expansionHub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        expansionHub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
 
         BulkReader.instance = this;
 
@@ -41,7 +41,7 @@ public class BulkReader {
 
     public void read() {
         controlHubData = controlHub.getBulkData();
-//        expansionHubData = expansionHub.getBulkData();
+        expansionHubData = expansionHub.getBulkData();
     }
 
     public double getHangTicks() {
@@ -50,10 +50,10 @@ public class BulkReader {
     }
 
     public double getLiftTicks() {
-        return controlHubData.getMotorCurrentPosition(3) - startLiftTicks;
+        return expansionHubData.getMotorCurrentPosition(1) - startLiftTicks;
     }
 
     public double getExtendoTicks() {
-        return controlHubData.getMotorCurrentPosition(0) - startExtendoTicks;
+        return expansionHubData.getMotorCurrentPosition(0) - startExtendoTicks;
     }
 }

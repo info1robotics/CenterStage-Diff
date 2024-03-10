@@ -14,31 +14,32 @@ public class Differential {
     public static double M1_MULTIPLIER = 1.0;
     public static double M2_MULTIPLIER = 1.0;
     public static double M3_MULTIPLIER = 1.0;
-
+    public static double[] LIFT_BOUND = new double[]{-50000, 0};
+    public static double[] EXTENDO_BOUND = new double[]{0, 75000};
+    public static double[] HANG_BOUND = new double[]{-1, 1};
     static double LIFT_CORRECTION = 4 / 8000d;
     static double EXTENDO_CORRECTION = 2 / 8000d;
     static double HANG_CORRECTION = 4 / 8000d;
-
-    static double[] LIFT_BOUND = new double[]{-50000, 0};
-    static double[] EXTENDO_BOUND = new double[]{0, 60000};
-
+    static double LIFT_DECEL_POS = -20000;
+    static double EXTENDO_DECEL_POS = 10000;
+    public Module<Double> prevTicks, targetTicks, prevPowers;
+    public Module<Double> prevRealPowers; // powers including correction
     DcMotor parallel1, parallel2, perpendicular;
     double[] powers = new double[]{0, 0, 0};
-
-    Module<Double> prevTicks, targetTicks, prevPowers;
     Module<Boolean> released;
     DifferentialTickBuffer differentialTickBuffer;
 
     public Differential(HardwareMap hardwareMap) {
-        parallel1 = hardwareMap.get(DcMotor.class, "diffPara1"); // Left, looking from intake
-        parallel2 = hardwareMap.get(DcMotor.class, "diffPara2"); // Right, looking from intake
-        perpendicular = hardwareMap.get(DcMotor.class, "diffPerp");
+        parallel1 = hardwareMap.get(DcMotor.class, "m1"); // Left, looking from intake
+        parallel2 = hardwareMap.get(DcMotor.class, "m2"); // Right, looking from intake
+        perpendicular = hardwareMap.get(DcMotor.class, "m3");
 
         differentialTickBuffer = new DifferentialTickBuffer();
 
         prevTicks = new Module<>(0d, 0d, 0d);
         targetTicks = new Module<>(0d, 0d, 0d);
         prevPowers = new Module<>(0d, 0d, 0d);
+        prevRealPowers = new Module<>(0d, 0d, 0d);
         released = new Module<>(true, true, true);
 
         DcMotor[] motors = new DcMotor[]{parallel1, parallel2, perpendicular};
@@ -71,20 +72,39 @@ public class Differential {
         powers = new double[]{0, 0, 0};
     }
 
+    public boolean isClose(double current, double target, double zone) {
+        return Math.abs(current - target) < zone;
+    }
+
     public void outputHang(double power) {
         powers[0] += power;
         powers[1] -= power;
+        prevRealPowers.setHang(power);
     }
 
     public void outputLift(double power) {
+        double originalPower = power;
         power = -power;
-        if (power < -0.7) power = -0.7;
+        if (power > 0.7) power = 0.7;
+
+        if (BulkReader.getInstance().getLiftTicks() > LIFT_DECEL_POS && originalPower < 0) {
+            power = Math.abs(BulkReader.getInstance().getLiftTicks() / LIFT_DECEL_POS) * 0.6 + 0.2;
+        }
+
+        prevRealPowers.setLift(power);
         powers[0] += power;
         powers[1] += power;
         powers[2] += power;
     }
 
     public void outputExtendo(double power) {
+        double currentPos = BulkReader.getInstance().getExtendoTicks();
+        if (currentPos < EXTENDO_DECEL_POS && power < 0) {
+            power = -(Math.abs(BulkReader.getInstance().getExtendoTicks() / EXTENDO_DECEL_POS) * 0.9 + 0.13);
+        }
+
+        prevRealPowers.setExtendo(power);
+
         powers[0] += power;
         powers[1] += power;
         powers[2] -= power;
@@ -154,17 +174,16 @@ public class Differential {
 
         // Bounds
         if (BulkReader.getInstance().getLiftTicks() < LIFT_BOUND[0] && liftPower > 0) {
-            liftPower = 0.0001;
+            liftPower = 0;
         } else if (BulkReader.getInstance().getLiftTicks() > LIFT_BOUND[1] && liftPower < 0) {
-            liftPower = -0.0001;
+            liftPower = 0;
         }
 
         if (BulkReader.getInstance().getExtendoTicks() < EXTENDO_BOUND[0] && extendoPower < 0) {
-            extendoPower = -0.0001;
+            extendoPower = 0;
         } else if (BulkReader.getInstance().getExtendoTicks() > EXTENDO_BOUND[1] && extendoPower > 0) {
-            extendoPower = 0.0001;
+            extendoPower = 0;
         }
-
 
 
         outputHang(hangPower);
