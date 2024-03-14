@@ -40,7 +40,7 @@ public class ExtendoSpeedTest extends LinearOpMode {
             if (!finished) {
                 diffy.tick(0, 0, 1);
             } else {
-                diffy.tick(0, 0, -1);
+//                diffy.tick(0, 0, -1);
             }
 
             if (diffy.prevRealPowers.getExtendo() < 0.18 && !finished) {

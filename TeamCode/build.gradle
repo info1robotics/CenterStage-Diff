@@ -10,6 +10,7 @@ buildscript {
     }
 }
 
+apply plugin: 'kotlin-android'
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 apply plugin: 'org.team11260.fast-load-plugin'

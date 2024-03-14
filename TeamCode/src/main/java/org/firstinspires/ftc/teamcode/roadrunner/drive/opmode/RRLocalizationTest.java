@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.roadrunner.drive.opmode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.common.BulkReader;
+import org.firstinspires.ftc.teamcode.common.Log;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 /**
@@ -19,9 +19,11 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 @TeleOp(group = "drive")
 public class RRLocalizationTest extends LinearOpMode {
     long timeLastTick = System.currentTimeMillis();
+
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        Log log = new Log(this.telemetry);
+        BulkReader bulkReader = new BulkReader(this.hardwareMap);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 //        double ileft = ((TwoWheelLocaliser) drive.getLocalizer()).getWheelPositions().get(0);
 //        double iright = ((TwoWheelLocaliser) drive.getLocalizer()).getWheelPositions().get(1);
@@ -31,8 +33,10 @@ public class RRLocalizationTest extends LinearOpMode {
         waitForStart();
 
         while (!isStopRequested()) {
+            bulkReader.read();
             telemetry.addData("Since Last Tick", System.currentTimeMillis() - timeLastTick);
             timeLastTick = System.currentTimeMillis();
+
             drive.setWeightedDrivePower(
                     new Pose2d(
                             -gamepad1.left_stick_y,
@@ -44,15 +48,12 @@ public class RRLocalizationTest extends LinearOpMode {
             drive.update();
 
             Pose2d poseEstimate = drive.getPoseEstimate();
-            telemetry.addData("x", poseEstimate.getX());
-            telemetry.addData("y", poseEstimate.getY());
-            telemetry.addData("heading", poseEstimate.getHeading());
-//            double left = ((StandardTrackingWheelLocalizer) drive.getLocalizer()).getWheelPositions().get(0);
-//            double right = ((StandardTrackingWheelLocalizer) drive.getLocalizer()).getWheelPositions().get(1);
-//            double front = ((StandardTrackingWheelLocalizer) drive.getLocalizer()).getWheelPositions().get(2);
-//            telemetry.addData("left", (left - ileft) + "");
-//            telemetry.addData("right ", (right - iright) + "");
-//            telemetry.addData("front", (front - ifront) + "");
+
+            log
+                    .add("x", poseEstimate.getX())
+                    .add("y", poseEstimate.getY())
+                    .add("heading", poseEstimate.getHeading());
+
             telemetry.update();
         }
     }

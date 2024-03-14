@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous(group = "Debug")
 public class SetPivotZero extends LinearOpMode {
-
     @Override
     public void runOpMode() throws InterruptedException {
         Servo pivotLeft = hardwareMap.servo.get("pivotLeft");

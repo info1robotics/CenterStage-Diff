@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Cover {
     Servo cover;
 
-    public static double COVER_CLOSED = 0.7;
+    public static double COVER_CLOSED = 0.9;
     public static double COVER_OPEN = 0;
 
     public Cover(HardwareMap hardwareMap) {

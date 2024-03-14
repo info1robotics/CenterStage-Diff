@@ -39,8 +39,6 @@ public class TeleopExtendo extends LinearOpMode {
 
         double hangPower, liftPower, extendoPower;
 
-        double start = System.currentTimeMillis();
-
         while (opModeIsActive() && !isStopRequested()) {
             hangPower = 0;
             liftPower = 0;
@@ -49,14 +47,12 @@ public class TeleopExtendo extends LinearOpMode {
             bulkReader.read();
             diffy.reset();
 
-            start = System.currentTimeMillis();
-
 
             if (gamepad2.dpad_up) {
                 extendoPower = 1;
             } else if (gamepad2.dpad_down) {
                 extendoPower = -1;
-            } 
+            }
 
             liftPower = -gamepad2.left_stick_y;
 

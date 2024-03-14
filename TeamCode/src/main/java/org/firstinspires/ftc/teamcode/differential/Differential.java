@@ -22,7 +22,9 @@ public class Differential {
     static double HANG_CORRECTION = 4 / 8000d;
     static double LIFT_DECEL_POS = -20000;
     static double EXTENDO_DECEL_POS = 10000;
-    public Module<Double> prevTicks, targetTicks, prevPowers;
+    public Module<Double> prevPowers;
+
+    public Module<Integer> targetTicks, prevTicks;
     public Module<Double> prevRealPowers; // powers including correction
     DcMotor parallel1, parallel2, perpendicular;
     double[] powers = new double[]{0, 0, 0};
@@ -36,8 +38,8 @@ public class Differential {
 
         differentialTickBuffer = new DifferentialTickBuffer();
 
-        prevTicks = new Module<>(0d, 0d, 0d);
-        targetTicks = new Module<>(0d, 0d, 0d);
+        prevTicks = new Module<>(0, 0, 0);
+        targetTicks = new Module<>(0, 0, 0);
         prevPowers = new Module<>(0d, 0d, 0d);
         prevRealPowers = new Module<>(0d, 0d, 0d);
         released = new Module<>(true, true, true);

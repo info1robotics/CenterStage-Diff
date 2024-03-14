@@ -11,7 +11,7 @@ public class BulkReader {
     LynxModule controlHub, expansionHub;
     public LynxModule.BulkData controlHubData, expansionHubData;
 
-    double startHangTicks = 0, startLiftTicks = 0, startExtendoTicks = 0;
+    int startHangTicks = 0, startLiftTicks = 0, startExtendoTicks = 0;
 
     static BulkReader instance;
     public static BulkReader getInstance() {
@@ -44,16 +44,16 @@ public class BulkReader {
         expansionHubData = expansionHub.getBulkData();
     }
 
-    public double getHangTicks() {
+    public int getHangTicks() {
 //        return controlHubData.getMotorCurrentPosition(-1) - startHangTicks;
         return 0;
     }
 
-    public double getLiftTicks() {
+    public int getLiftTicks() {
         return expansionHubData.getMotorCurrentPosition(1) - startLiftTicks;
     }
 
-    public double getExtendoTicks() {
+    public int getExtendoTicks() {
         return expansionHubData.getMotorCurrentPosition(0) - startExtendoTicks;
     }
 }
