@@ -2,17 +2,20 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @Config
 public class Cover {
-    Servo cover;
+    ServoImplEx cover;
 
     public static double COVER_CLOSED = 0.9;
-    public static double COVER_OPEN = 0;
+    public static double COVER_OPEN = 0.1;
 
     public Cover(HardwareMap hardwareMap) {
-        cover = hardwareMap.servo.get("cover");
+        cover = hardwareMap.get(ServoImplEx.class, "cover");
+        cover.setPwmRange(new PwmControl.PwmRange(500, 2500));
     }
 
     public void setClosed() {
@@ -33,5 +36,10 @@ public class Cover {
 
     public boolean isOpen() {
         return cover.getPosition() == COVER_OPEN;
+    }
+
+    public void toggle() {
+        if (isClosed()) setOpen();
+        else setClosed();
     }
 }

@@ -31,4 +31,9 @@ public class Log {
     public void tick() {
         telemetry.update();
     }
+
+    public Log clear() {
+        telemetry.clearAll();
+        return this;
+    }
 }

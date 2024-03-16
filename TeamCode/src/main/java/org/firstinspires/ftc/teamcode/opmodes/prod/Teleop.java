@@ -72,9 +72,9 @@ public class Teleop extends LinearOpMode {
             double rightStickY = -gamepad2.right_stick_y;
 
             if (leftStickY > 0.06) {
-                intake.setPower(Math.min(leftStickY, 0.4));
+                intake.setPower(Math.min(leftStickY, 0.7));
             } else if (leftStickY < 0.06) {
-                intake.setPower(Math.max(-0.4, leftStickY));
+                intake.setPower(Math.max(-0.7, leftStickY));
             }
 
             if (rightStickY > 0.06) {

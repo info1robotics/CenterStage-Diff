@@ -11,14 +11,14 @@ import org.firstinspires.ftc.teamcode.subsystems.Fold;
 @Config
 @Autonomous(group = "Calibration")
 public class CalibrateFold extends LinearOpMode {
-    public static double position = 0.0;
+    public static double position = 0.7;
     @Override
     public void runOpMode() throws InterruptedException {
         Log log = new Log(this.telemetry);
         Fold fold = new Fold(this.hardwareMap);
 
         while (opModeInInit()) {
-            log.add("Align the fold perpendicular to the ground.");
+            log.add("Align the fold parallel to the ground.");
             log.tick();
         }
 

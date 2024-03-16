@@ -17,6 +17,7 @@ public class Pivot {
         pivotLeft = hardwareMap.get(ServoImplEx.class, "pivotLeft");
         pivotRight = hardwareMap.get(ServoImplEx.class, "pivotRight");
 
+
         pivotLeft.setPwmRange(new PwmControl.PwmRange(500, 2500));
         pivotRight.setPwmRange(new PwmControl.PwmRange(500, 2500));
 

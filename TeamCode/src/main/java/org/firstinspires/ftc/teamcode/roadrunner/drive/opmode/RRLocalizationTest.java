@@ -34,7 +34,7 @@ public class RRLocalizationTest extends LinearOpMode {
 
         while (!isStopRequested()) {
             bulkReader.read();
-            telemetry.addData("Since Last Tick", System.currentTimeMillis() - timeLastTick);
+            log.add("Since Last Tick", System.currentTimeMillis() - timeLastTick);
             timeLastTick = System.currentTimeMillis();
 
             drive.setWeightedDrivePower(
@@ -54,7 +54,7 @@ public class RRLocalizationTest extends LinearOpMode {
                     .add("y", poseEstimate.getY())
                     .add("heading", poseEstimate.getHeading());
 
-            telemetry.update();
+            log.tick();
         }
     }
 }

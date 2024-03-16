@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.roadrunner.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 
 import java.util.Arrays;
@@ -36,18 +37,16 @@ public class TwoWheelLocaliser extends TwoTrackingWheelLocalizer {
     public static double Y_MULTIPLIER = 1.007432613952;
     private final SampleMecanumDrive drive;
 
-    private Encoder parallelEncoder, perpEncoder;
+    private final Odometry parallelOdo = new Odometry(3, false);
+    private final Odometry perpendicularOdo = new Odometry(1, false);
 
     public TwoWheelLocaliser(HardwareMap hardwareMap, SampleMecanumDrive drive) {
         super(Arrays.asList(
-                new Pose2d(-2.78, -6.88, 0), // right
-                new Pose2d(5.37, 0, Math.toRadians(90)) // front
+                new Pose2d(6.65, 3.66675, 0), // left
+                new Pose2d(6.25, 0, Math.toRadians(90)) // front
         ));
 
         this.drive = drive;
-
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "BL")); // parallel
-        perpEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "FL")); // perpendicular
     }
 
 
@@ -58,8 +57,8 @@ public class TwoWheelLocaliser extends TwoTrackingWheelLocalizer {
     @NonNull
     @Override
     public List<Double> getWheelPositions() {
-        int rightPos = parallelEncoder.getCurrentPosition();
-        int frontPos = perpEncoder.getCurrentPosition();
+        int rightPos = parallelOdo.getCurrentPosition();
+        int frontPos = perpendicularOdo.getCurrentPosition();
 
         return Arrays.asList(
                 encoderTicksToInches(rightPos) * X_MULTIPLIER,
@@ -71,8 +70,8 @@ public class TwoWheelLocaliser extends TwoTrackingWheelLocalizer {
     @Override
     public List<Double> getWheelVelocities() {
 
-        int rightVel = (int) parallelEncoder.getCorrectedVelocity();
-        int frontVel = (int) perpEncoder.getCorrectedVelocity();
+        int rightVel = (int) parallelOdo.getCorrectedVelocity();
+        int frontVel = (int) perpendicularOdo.getCorrectedVelocity();
 
 
         return Arrays.asList(

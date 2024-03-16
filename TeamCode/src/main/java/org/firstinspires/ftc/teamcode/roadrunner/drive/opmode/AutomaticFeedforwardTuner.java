@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
+import org.firstinspires.ftc.teamcode.common.BulkReader;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.util.LoggingUtil;
 import org.firstinspires.ftc.teamcode.roadrunner.util.RegressionUtil;
@@ -40,6 +41,7 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        BulkReader bulkReader = new BulkReader(this.hardwareMap);
         if (RUN_USING_ENCODER) {
             RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +
                     "when using the built-in drive motor velocity PID.");
@@ -65,6 +67,7 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
 
         boolean fitIntercept = false;
         while (!isStopRequested()) {
+
             if (gamepad1.y) {
                 fitIntercept = true;
                 while (!isStopRequested() && gamepad1.y) {
@@ -110,6 +113,7 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
 
         double startTime = clock.seconds();
         while (!isStopRequested()) {
+            bulkReader.read();
             double elapsedTime = clock.seconds() - startTime;
             if (elapsedTime > rampTime) {
                 break;
@@ -146,6 +150,7 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
 
         boolean fitAccelFF = false;
         while (!isStopRequested()) {
+            bulkReader.read();
             if (gamepad1.y) {
                 fitAccelFF = true;
                 while (!isStopRequested() && gamepad1.y) {
@@ -189,6 +194,7 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
 
             startTime = clock.seconds();
             while (!isStopRequested()) {
+                bulkReader.read();
                 double elapsedTime = clock.seconds() - startTime;
                 if (elapsedTime > maxPowerTime) {
                     break;

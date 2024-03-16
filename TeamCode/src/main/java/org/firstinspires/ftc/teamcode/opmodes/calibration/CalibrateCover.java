@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Cover;
 @Config
 @Autonomous(group = "Calibration")
 public class CalibrateCover extends LinearOpMode {
-    public static double position = 0.0;
+    public static double position = 0.8;
     @Override
     public void runOpMode() throws InterruptedException {
         Log log = new Log(this.telemetry);

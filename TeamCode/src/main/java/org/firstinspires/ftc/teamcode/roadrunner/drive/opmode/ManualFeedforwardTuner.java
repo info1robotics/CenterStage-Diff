@@ -23,6 +23,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.common.BulkReader;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 import java.util.Objects;
@@ -66,6 +67,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        BulkReader bulkReader = new BulkReader(this.hardwareMap);
         if (RUN_USING_ENCODER) {
             RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +
                     "when using the built-in drive motor velocity PID.");
@@ -106,6 +108,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
         boolean reset = false;
 
         while (!isStopRequested()) {
+            bulkReader.read();
             telemetry.addData("mode", mode);
 
             switch (mode) {
@@ -150,21 +153,21 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                         profileStart = clock.seconds();
                     }
 
-//                    drive.setWeightedDrivePower(
-//                            new Pose2d(
-//                                    -gamepad1.left_stick_y,
-//                                    -gamepad1.left_stick_x,
-//                                    -gamepad1.right_stick_x
-//                            )
-//                    );
-                    if (!reset) {
-                        Trajectory traj = drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .lineToLinearHeading(startPose)
-                                .build();
-
-                        drive.followTrajectory(traj);
-                        reset = true;
-                    }
+                    drive.setWeightedDrivePower(
+                            new Pose2d(
+                                    -gamepad1.left_stick_y,
+                                    -gamepad1.left_stick_x,
+                                    -gamepad1.right_stick_x
+                            )
+                    );
+//                    if (!reset) {
+//                        Trajectory traj = drive.trajectoryBuilder(drive.getPoseEstimate())
+//                                .lineToLinearHeading(startPose)
+//                                .build();
+//
+//                        drive.followTrajectory(traj);
+//                        reset = true;
+//                    }
                     break;
             }
 
