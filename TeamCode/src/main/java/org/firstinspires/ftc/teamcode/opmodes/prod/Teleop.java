@@ -1,32 +1,38 @@
 package org.firstinspires.ftc.teamcode.opmodes.prod;
 
+import android.util.Pair;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.common.ActionQueue;
 import org.firstinspires.ftc.teamcode.common.BulkReader;
 import org.firstinspires.ftc.teamcode.common.GamepadEx;
 import org.firstinspires.ftc.teamcode.common.Log;
+import org.firstinspires.ftc.teamcode.common.ScheduledRunnable;
 import org.firstinspires.ftc.teamcode.differential.Differential;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Cover;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Fold;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Joint;
 import org.firstinspires.ftc.teamcode.subsystems.Pivot;
+
+import java.util.ArrayList;
 
 @TeleOp(name = "teleop pur teoretic smr mama")
 public class Teleop extends LinearOpMode {
-    public static final double liftOpenCoverTick = 2000;
-    public static final double liftCloseCoverTick = 1000;
 
-    public static final double liftCollectTick = 4000;
-    public static final double liftScoreTick = 20000;
+    public static final long IGNORE_LIFT_FOR_MS = 150;
+    private long msUntilIgnoreLift = System.currentTimeMillis();
 
-    public static final double waitForCoverMs = 500;
+    ActionQueue actionQueue = new ActionQueue();
 
     @Override
     public void runOpMode() throws InterruptedException {
         Log log = new Log(telemetry);
+
 
         GamepadEx gamepadEx1 = new GamepadEx(gamepad1);
         GamepadEx gamepadEx2 = new GamepadEx(gamepad2);
@@ -40,9 +46,12 @@ public class Teleop extends LinearOpMode {
         Cover cover = new Cover(this.hardwareMap);
         Fold fold = new Fold(this.hardwareMap);
         Intake intake = new Intake(this.hardwareMap);
+        Joint joint = new Joint(this.hardwareMap);
 
         fold.setDrive();
         cover.setClosed();
+        pivot.setCollect();
+        joint.setCollect();
         claw.open();
 
         waitForStart();
@@ -58,8 +67,6 @@ public class Teleop extends LinearOpMode {
 
         double hangPower, liftPower, exendoPower;
 
-        long timeLastCoverWait = System.currentTimeMillis();
-
         while (opModeIsActive() && !isStopRequested()) {
             hangPower = 0;
             liftPower = 0;
@@ -73,15 +80,17 @@ public class Teleop extends LinearOpMode {
 
             if (leftStickY > 0.06) {
                 intake.setPower(Math.min(leftStickY, 0.7));
-            } else if (leftStickY < 0.06) {
+            } else if (leftStickY < -0.06) {
                 intake.setPower(Math.max(-0.7, leftStickY));
             }
 
             if (rightStickY > 0.06) {
                 liftPower = Math.max(rightStickY, 0.5);
-            } else if (rightStickY < 0.06) {
+            } else if (rightStickY < -0.06) {
                 liftPower = Math.min(-0.5, rightStickY);
             }
+
+            log.add("Right Stick Y", rightStickY);
 
             if (gamepad2.dpad_up) {
                 exendoPower = 0.5;
@@ -103,30 +112,43 @@ public class Teleop extends LinearOpMode {
                 claw.close();
             }
 
-            if (bulkReader.getLiftTicks() > -liftOpenCoverTick && liftPower > 0 && cover.isClosed()) {
-                cover.setOpen();
-                liftPower = 0;
-                timeLastCoverWait = System.currentTimeMillis();
-            }
-
-            if (timeLastCoverWait - System.currentTimeMillis() < waitForCoverMs) {
+            if (System.currentTimeMillis() < msUntilIgnoreLift) {
                 liftPower = 0;
             }
 
-            if (liftPower < 0 && bulkReader.getLiftTicks() > -liftCloseCoverTick) {
-                cover.setClosed();
-            }
+            if (liftPower > 0.1) {
+                if (BulkReader.getInstance().getLiftTicks() > -2300 && !pivot.is(Pivot.PivotState.SCORE)) {
+                    actionQueue.clear();
+                    long delay = cover.isClosed() ? IGNORE_LIFT_FOR_MS : 0;
+                    if (cover.isClosed()) {
+                        cover.setOpen();
+                        msUntilIgnoreLift = System.currentTimeMillis() + IGNORE_LIFT_FOR_MS;
+                    }
 
-            if (bulkReader.getLiftTicks() > -liftCollectTick) {
-                pivot.setCollect();
-            } else if (bulkReader.getLiftTicks() < -liftScoreTick) {
-                pivot.setScore();
+                    claw.close();
+                    actionQueue.add(new ScheduledRunnable(pivot::setScore, delay, "pivot"));
+                    actionQueue.add(new ScheduledRunnable(joint::setTransition, delay, "joint"));
+                    actionQueue.add(new ScheduledRunnable(joint::setScore, 300 + delay, "joint"));
+                    actionQueue.add(new ScheduledRunnable(cover::setClosed, 800 + delay, "cover"));
+                }
+            } else if (liftPower < -0.1) {
+                if (BulkReader.getInstance().getLiftTicks() > -15000 && !pivot.is(Pivot.PivotState.COLLECT)) {
+                    actionQueue.clear();
+                    if (cover.isClosed()) {
+                        cover.setOpen();
+                    }
+
+                    actionQueue.add(new ScheduledRunnable(pivot::setCollect, 0, "pivot"));
+                    actionQueue.add(new ScheduledRunnable(joint::setCollect, 0, "joint"));
+                    actionQueue.add(new ScheduledRunnable(cover::setClosed,  800, "cover"));
+                }
             }
 
             diffy.tick(hangPower, liftPower, exendoPower);
             diffy.update();
 
             gamepadEx2.update();
+            actionQueue.tick();
             log.tick();
         }
     }

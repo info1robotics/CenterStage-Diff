@@ -52,22 +52,6 @@ public class Drivetrain {
         bl.setMotorType(motorConfigurationType);
     }
 
-    private double[] normalize(double[] values) {
-        if (Math.abs(values[0]) > 1 || Math.abs(values[2]) > 1 ||
-                Math.abs(values[1]) > 1 || Math.abs(values[3]) > 1) {
-            double max;
-            max = Math.max(Math.abs(values[0]), Math.abs(values[2]));
-            max = Math.max(Math.abs(values[1]), max);
-            max = Math.max(Math.abs(values[3]), max);
-
-            values[0] /= max;
-            values[1] /= max;
-            values[2] /= max;
-            values[3] /= max;
-        }
-        return values;
-    }
-
     public void setRunMode(DcMotor.RunMode runMode) {
         fl.setMode(runMode);
         fr.setMode(runMode);

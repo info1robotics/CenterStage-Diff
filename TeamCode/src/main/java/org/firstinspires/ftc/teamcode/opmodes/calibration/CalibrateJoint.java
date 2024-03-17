@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Joint;
 @Config
 @Autonomous(group = "Calibration")
 public class CalibrateJoint extends LinearOpMode {
-    public static double position = 1.0;
+    public static double position = 0.7;
     @Override
     public void runOpMode() throws InterruptedException {
         Log log = new Log(this.telemetry);

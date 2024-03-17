@@ -7,8 +7,9 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 public class Joint {
     ServoImplEx joint;
 
-    public static double JOINT_COLLECT = 1; // TODO: find positions
-    public static double JOINT_SCORE = 0.65;
+    public static double JOINT_COLLECT = 0.7; // TODO: find positions
+    public static double JOINT_SCORE = 0.35;
+    public static double JOINT_TRANSITION = 0.95;
 
     public Joint(HardwareMap hardwareMap) {
         joint = hardwareMap.get(ServoImplEx.class, "joint");
@@ -16,6 +17,10 @@ public class Joint {
 
     public void setCollect() {
         joint.setPosition(JOINT_COLLECT);
+    }
+
+    public void setTransition() {
+        joint.setPosition(JOINT_TRANSITION);
     }
 
     public void setScore() {

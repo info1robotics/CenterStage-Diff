@@ -12,6 +12,7 @@ public class Cover {
 
     public static double COVER_CLOSED = 0.9;
     public static double COVER_OPEN = 0.1;
+    boolean open = false;
 
     public Cover(HardwareMap hardwareMap) {
         cover = hardwareMap.get(ServoImplEx.class, "cover");
@@ -19,10 +20,12 @@ public class Cover {
     }
 
     public void setClosed() {
+        open = false;
         cover.setPosition(COVER_CLOSED);
     }
 
     public void setOpen() {
+        open = true;
         cover.setPosition(COVER_OPEN);
     }
 
@@ -30,12 +33,12 @@ public class Cover {
         cover.setPosition(position);
     }
 
-    public boolean isClosed() {
-        return cover.getPosition() == COVER_CLOSED;
+    public boolean isOpen() {
+        return open;
     }
 
-    public boolean isOpen() {
-        return cover.getPosition() == COVER_OPEN;
+    public boolean isClosed() {
+        return !open;
     }
 
     public void toggle() {

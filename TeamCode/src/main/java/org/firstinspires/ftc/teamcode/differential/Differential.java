@@ -90,7 +90,7 @@ public class Differential {
         if (power > 0.7) power = 0.7;
 
         if (BulkReader.getInstance().getLiftTicks() > LIFT_DECEL_POS && originalPower < 0) {
-            power = Math.abs(BulkReader.getInstance().getLiftTicks() / LIFT_DECEL_POS) * 0.6 + 0.2;
+            power = Math.abs(BulkReader.getInstance().getLiftTicks() / LIFT_DECEL_POS) * 0.9 + 0.1;
         }
 
         prevRealPowers.setLift(power);
