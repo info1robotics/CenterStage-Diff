@@ -82,6 +82,8 @@ public class Teleop extends LinearOpMode {
                 intake.setPower(Math.min(leftStickY, 0.7));
             } else if (leftStickY < -0.06) {
                 intake.setPower(Math.max(-0.7, leftStickY));
+            } else {
+                intake.setPower(0.0);
             }
 
             if (rightStickY > 0.06) {
