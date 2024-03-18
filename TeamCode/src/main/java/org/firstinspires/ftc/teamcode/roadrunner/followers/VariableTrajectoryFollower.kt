@@ -26,6 +26,7 @@ abstract class VariableTrajectoryFollower @JvmOverloads constructor(
     private var executedFinalUpdate = false
 
     companion object {
+        @JvmStatic
         var variableTimeout = 0.5;
     }
 

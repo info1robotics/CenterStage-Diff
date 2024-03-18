@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.common.Log;
 import org.firstinspires.ftc.teamcode.roadrunner.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 
@@ -38,12 +39,12 @@ public class TwoWheelLocaliser extends TwoTrackingWheelLocalizer {
     private final SampleMecanumDrive drive;
 
     private final Odometry parallelOdo = new Odometry(3, false);
-    private final Odometry perpendicularOdo = new Odometry(1, false);
+    private final Odometry perpendicularOdo = new Odometry(0, false);
 
     public TwoWheelLocaliser(HardwareMap hardwareMap, SampleMecanumDrive drive) {
         super(Arrays.asList(
                 new Pose2d(6.65, 3.66675, 0), // left
-                new Pose2d(6.25, 0, Math.toRadians(90)) // front
+                new Pose2d(6.25, -0.3, Math.toRadians(90)) // front
         ));
 
         this.drive = drive;
@@ -59,6 +60,10 @@ public class TwoWheelLocaliser extends TwoTrackingWheelLocalizer {
     public List<Double> getWheelPositions() {
         int rightPos = parallelOdo.getCurrentPosition();
         int frontPos = perpendicularOdo.getCurrentPosition();
+
+        Log.getInstance()
+                .add("Right Odo Pos", rightPos)
+                .add("Front Odo Pos", frontPos);
 
         return Arrays.asList(
                 encoderTicksToInches(rightPos) * X_MULTIPLIER,

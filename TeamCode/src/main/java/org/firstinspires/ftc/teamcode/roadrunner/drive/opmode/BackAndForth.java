@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.common.BulkReader;
+import org.firstinspires.ftc.teamcode.common.Log;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 /*
@@ -33,6 +34,7 @@ public class BackAndForth extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        Log log = new Log(this.telemetry);
         BulkReader bulkReader = new BulkReader(this.hardwareMap);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 

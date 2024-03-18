@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @Config
@@ -19,12 +18,12 @@ public class Cover {
         cover.setPwmRange(new PwmControl.PwmRange(500, 2500));
     }
 
-    public void setClosed() {
+    public void close() {
         open = false;
         cover.setPosition(COVER_CLOSED);
     }
 
-    public void setOpen() {
+    public void open() {
         open = true;
         cover.setPosition(COVER_OPEN);
     }
@@ -42,7 +41,7 @@ public class Cover {
     }
 
     public void toggle() {
-        if (isClosed()) setOpen();
-        else setClosed();
+        if (isClosed()) open();
+        else close();
     }
 }

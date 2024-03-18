@@ -14,13 +14,13 @@ public class Differential {
     public static double M1_MULTIPLIER = 1.0;
     public static double M2_MULTIPLIER = 1.0;
     public static double M3_MULTIPLIER = 1.0;
-    public static double[] LIFT_BOUND = new double[]{-50000, 0};
-    public static double[] EXTENDO_BOUND = new double[]{0, 75000};
-    public static double[] HANG_BOUND = new double[]{-1, 1};
+    public static int[] LIFT_BOUND = new int[]{-50000, 0};
+    public static int[] EXTENDO_BOUND = new int[]{0, 75000};
+    public static int[] HANG_BOUND = new int[]{-1, 1};
     static double LIFT_CORRECTION = 4 / 8000d;
     static double EXTENDO_CORRECTION = 2 / 8000d;
     static double HANG_CORRECTION = 4 / 8000d;
-    static double LIFT_DECEL_POS = -20000;
+    static double LIFT_DECEL_POS = -25000;
     static double EXTENDO_DECEL_POS = 10000;
     public Module<Double> prevPowers;
 
@@ -42,7 +42,7 @@ public class Differential {
         targetTicks = new Module<>(0, 0, 0);
         prevPowers = new Module<>(0d, 0d, 0d);
         prevRealPowers = new Module<>(0d, 0d, 0d);
-        released = new Module<>(true, true, true);
+        released = new Module<>(false, false, false);
 
         DcMotor[] motors = new DcMotor[]{parallel1, parallel2, perpendicular};
 
@@ -90,9 +90,11 @@ public class Differential {
         if (power > 0.7) power = 0.7;
 
         if (BulkReader.getInstance().getLiftTicks() > LIFT_DECEL_POS && originalPower < 0) {
-            power = Math.abs(BulkReader.getInstance().getLiftTicks() / LIFT_DECEL_POS) * 0.9 + 0.1;
+            power = Math.abs(BulkReader.getInstance().getLiftTicks() / LIFT_DECEL_POS) + 0.15;
+//            if (Math.abs(power) < 0.14) {
+//                power = 0;
+//            }
         }
-
         prevRealPowers.setLift(power);
         powers[0] += power;
         powers[1] += power;
@@ -102,7 +104,10 @@ public class Differential {
     public void outputExtendo(double power) {
         double currentPos = BulkReader.getInstance().getExtendoTicks();
         if (currentPos < EXTENDO_DECEL_POS && power < 0) {
-            power = -(Math.abs(BulkReader.getInstance().getExtendoTicks() / EXTENDO_DECEL_POS) * 0.9 + 0.13);
+            power = -(Math.abs(BulkReader.getInstance().getExtendoTicks() / EXTENDO_DECEL_POS) + 0.05);
+            if (Math.abs(power) < 0.12) {
+                power = 0;
+            }
         }
 
         prevRealPowers.setExtendo(power);
@@ -141,10 +146,6 @@ public class Differential {
             released.setExtendo(true);
         }
 
-//        if (originalHangPower == 0 && prevPowers.getHang() != 0) {
-//            released.setHang(true);
-//        }
-
         // Reached stability after button release
         if (differentialTickBuffer.isExtendoStable() && released.getExtendo()) {
             targetTicks.setExtendo(BulkReader.getInstance().getExtendoTicks());
@@ -155,11 +156,6 @@ public class Differential {
             targetTicks.setLift(BulkReader.getInstance().getLiftTicks());
             released.setLift(false);
         }
-
-//        if (differentialTickBuffer.isHangStable() && released.getHang()) {
-//            targetTicks.setHang(BulkReader.getInstance().getHangTicks());
-//            released.setHang(false);
-//        }
 
         // Calculate correction power and apply if reached stability
         if (extendoPower == 0 && !released.getExtendo()) {
@@ -202,13 +198,13 @@ public class Differential {
 
         Log.getInstance()
                 .add("Hang", hangPower)
-                .add("Extendo", extendoPower)
+                .add("Extendo", prevRealPowers.getExtendo())
                 .add("Extendo Ticks", BulkReader.getInstance().getExtendoTicks())
                 .add("Extendo Target", targetTicks.getExtendo())
                 .add("Power 0", powers[0])
                 .add("Power 1", powers[1])
                 .add("Power 2", powers[2])
-                .add("Lift", liftPower)
+                .add("Lift", prevRealPowers.getLift())
                 .add("Lift Ticks", BulkReader.getInstance().getLiftTicks())
                 .add("Lift Target", targetTicks.getLift());
 

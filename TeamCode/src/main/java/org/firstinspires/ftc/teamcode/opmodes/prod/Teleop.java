@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.prod;
 
-import android.util.Pair;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -19,8 +17,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Joint;
 import org.firstinspires.ftc.teamcode.subsystems.Pivot;
 
-import java.util.ArrayList;
-
 @TeleOp(name = "teleop pur teoretic smr mama")
 public class Teleop extends LinearOpMode {
 
@@ -32,7 +28,6 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Log log = new Log(telemetry);
-
 
         GamepadEx gamepadEx1 = new GamepadEx(gamepad1);
         GamepadEx gamepadEx2 = new GamepadEx(gamepad2);
@@ -49,7 +44,7 @@ public class Teleop extends LinearOpMode {
         Joint joint = new Joint(this.hardwareMap);
 
         fold.setDrive();
-        cover.setClosed();
+        cover.close();
         pivot.setCollect();
         joint.setCollect();
         claw.open();
@@ -95,9 +90,9 @@ public class Teleop extends LinearOpMode {
             log.add("Right Stick Y", rightStickY);
 
             if (gamepad2.dpad_up) {
-                exendoPower = 0.5;
+                exendoPower = 1;
             } else if (gamepad2.dpad_down) {
-                exendoPower = -0.5;
+                exendoPower = -1;
             }
 
             if (gamepadEx2.getButtonDown("bumper_left")) {
@@ -123,7 +118,7 @@ public class Teleop extends LinearOpMode {
                     actionQueue.clear();
                     long delay = cover.isClosed() ? IGNORE_LIFT_FOR_MS : 0;
                     if (cover.isClosed()) {
-                        cover.setOpen();
+                        cover.open();
                         msUntilIgnoreLift = System.currentTimeMillis() + IGNORE_LIFT_FOR_MS;
                     }
 
@@ -131,18 +126,18 @@ public class Teleop extends LinearOpMode {
                     actionQueue.add(new ScheduledRunnable(pivot::setScore, delay, "pivot"));
                     actionQueue.add(new ScheduledRunnable(joint::setTransition, delay, "joint"));
                     actionQueue.add(new ScheduledRunnable(joint::setScore, 300 + delay, "joint"));
-                    actionQueue.add(new ScheduledRunnable(cover::setClosed, 800 + delay, "cover"));
+                    actionQueue.add(new ScheduledRunnable(cover::close, 800 + delay, "cover"));
                 }
             } else if (liftPower < -0.1) {
                 if (BulkReader.getInstance().getLiftTicks() > -15000 && !pivot.is(Pivot.PivotState.COLLECT)) {
                     actionQueue.clear();
                     if (cover.isClosed()) {
-                        cover.setOpen();
+                        cover.open();
                     }
 
                     actionQueue.add(new ScheduledRunnable(pivot::setCollect, 0, "pivot"));
                     actionQueue.add(new ScheduledRunnable(joint::setCollect, 0, "joint"));
-                    actionQueue.add(new ScheduledRunnable(cover::setClosed,  800, "cover"));
+                    actionQueue.add(new ScheduledRunnable(cover::close,  800, "cover"));
                 }
             }
 

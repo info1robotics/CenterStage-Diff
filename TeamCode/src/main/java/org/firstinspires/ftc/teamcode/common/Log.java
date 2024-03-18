@@ -6,7 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Log {
-    public Telemetry telemetry;
+    Telemetry telemetry;
     public static Log instance;
 
     public static Log getInstance() {

@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.common.GamepadEx;
 import org.firstinspires.ftc.teamcode.common.Log;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Cover;
-import org.firstinspires.ftc.teamcode.subsystems.Fold;
 import org.firstinspires.ftc.teamcode.subsystems.Joint;
 import org.firstinspires.ftc.teamcode.subsystems.Pivot;
 
@@ -22,7 +21,7 @@ public class TeleopOuttake extends LinearOpMode {
         Joint joint = new Joint(this.hardwareMap);
 
         GamepadEx gamepadEx2 = new GamepadEx(gamepad2);
-        cover.setOpen();
+        cover.open();
         claw.open();
         pivot.setCollect();
         joint.setCollect();

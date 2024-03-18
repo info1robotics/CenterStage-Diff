@@ -30,7 +30,7 @@ public class IntakeTest extends LinearOpMode {
         GamepadEx gamepadEx2 = new GamepadEx(gamepad2);
 
         fold.setDrive();
-        cover.setClosed();
+        cover.close();
 
 
         while (opModeIsActive() && !isStopRequested()) {

@@ -13,6 +13,9 @@ public class Fold {
     public static double FOLD_INIT = 0;
     public static double FOLD_DRIVE = 0.92;
 
+    // auto positions top to bottom
+    public static double[] autoPositions = {0.7, 75, 0.80, 0.85, FOLD_DRIVE, FOLD_INIT};
+
     public Fold(HardwareMap hardwareMap) {
         fold = hardwareMap.get(ServoImplEx.class, "fold");
         fold.setPwmRange(new PwmControl.PwmRange(500, 2500));

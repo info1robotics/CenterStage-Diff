@@ -399,6 +399,10 @@ public class TrajectorySequenceBuilder {
         return this.addTemporalMarker(currentDuration + offset, callback);
     }
 
+    public TrajectorySequenceBuilder run(MarkerCallback callback) {
+        return this.addTemporalMarker(currentDuration, callback);
+    }
+
     public TrajectorySequenceBuilder addTemporalMarker(double time, MarkerCallback callback) {
         return this.addTemporalMarker(0.0, time, callback);
     }
