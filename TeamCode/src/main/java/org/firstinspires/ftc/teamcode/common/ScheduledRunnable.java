@@ -13,6 +13,13 @@ public class ScheduledRunnable {
         this.startTime = System.currentTimeMillis();
     }
 
+    public ScheduledRunnable(Runnable runnable, long delay) {
+        this.runnable = runnable;
+        this.delay = delay;
+        this.type = "";
+        this.startTime = System.currentTimeMillis();
+    }
+
     public void run() {
         runnable.run();
     }

@@ -44,7 +44,7 @@ public class TwoWheelLocaliser extends TwoTrackingWheelLocalizer {
     public TwoWheelLocaliser(HardwareMap hardwareMap, SampleMecanumDrive drive) {
         super(Arrays.asList(
                 new Pose2d(6.65, 3.66675, 0), // left
-                new Pose2d(6.25, -0.3, Math.toRadians(90)) // front
+                new Pose2d(6.25, -0, Math.toRadians(90)) // front
         ));
 
         this.drive = drive;

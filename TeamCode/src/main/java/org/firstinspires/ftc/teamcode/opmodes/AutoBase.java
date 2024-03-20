@@ -129,8 +129,10 @@ public abstract class AutoBase extends LinearOpMode {
         log.add("Final Detection", tsePosition.toString());
         log.tick();
 
-        camera.closeCameraDeviceAsync(() -> {});
+//        camera.closeCameraDeviceAsync(() -> {});
         onStart();
+
+        fold.setPosition(Fold.FOLD_UP);
 
         state = State.START;
         if (task != null) task.start(this);

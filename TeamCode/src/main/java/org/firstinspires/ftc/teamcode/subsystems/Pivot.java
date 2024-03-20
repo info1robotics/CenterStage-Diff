@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 public class Pivot {
     ServoImplEx pivotLeft, pivotRight;
 
-    public static double PIVOT_COLLECT = 0.08;
+    public static double PIVOT_COLLECT = 0.09;
     public static double PIVOT_SCORE = 1;
     PivotState pivotState = PivotState.NONE;
 

@@ -21,10 +21,14 @@ public class Differential {
     static double EXTENDO_CORRECTION = 2 / 8000d;
     static double HANG_CORRECTION = 4 / 8000d;
     static double LIFT_DECEL_POS = -25000;
-    static double EXTENDO_DECEL_POS = 10000;
+    static double EXTENDO_DECEL_POS = 8000;
+
+    static double LIFT_CORRECTION_TARGET = 0.5 / 8192;
+    static double EXTENDO_CORRECTION_TARGET = 0.5 / 8192;
+
     public Module<Double> prevPowers;
 
-    public Module<Integer> targetTicks, prevTicks;
+    public Module<Integer> targetTicks, prevTicks, userTargetPosition;
     public Module<Double> prevRealPowers; // powers including correction
     DcMotor parallel1, parallel2, perpendicular;
     double[] powers = new double[]{0, 0, 0};
@@ -40,6 +44,7 @@ public class Differential {
 
         prevTicks = new Module<>(0, 0, 0);
         targetTicks = new Module<>(0, 0, 0);
+        userTargetPosition = new Module<>(-1, -1, -1);
         prevPowers = new Module<>(0d, 0d, 0d);
         prevRealPowers = new Module<>(0d, 0d, 0d);
         released = new Module<>(false, false, false);
@@ -112,6 +117,7 @@ public class Differential {
 
         prevRealPowers.setExtendo(power);
 
+        power = 0; // TODO: REMOVE LOCK !!!!
         powers[0] += power;
         powers[1] += power;
         powers[2] -= power;
@@ -158,12 +164,21 @@ public class Differential {
         }
 
         // Calculate correction power and apply if reached stability
-        if (extendoPower == 0 && !released.getExtendo()) {
+        if (extendoPower == 0 && !released.getExtendo() && userTargetPosition.getExtendo() == -1) {
             extendoPower = -(BulkReader.getInstance().getExtendoTicks() - targetTicks.getExtendo()) * EXTENDO_CORRECTION;
         }
 
-        if (liftPower == 0 && !released.getLift()) {
+        if (liftPower == 0 && !released.getLift() && userTargetPosition.getLift() == -1) {
             liftPower = (BulkReader.getInstance().getLiftTicks() - targetTicks.getLift()) * LIFT_CORRECTION;
+        }
+
+        if (userTargetPosition.getLift() != -1) {
+            liftPower = (BulkReader.getInstance().getLiftTicks() - userTargetPosition.getLift()) * LIFT_CORRECTION_TARGET;
+            Log.getInstance().add("Lift Target User Power", liftPower);
+        }
+
+        if (userTargetPosition.getExtendo() != -1) {
+            extendoPower = -(BulkReader.getInstance().getExtendoTicks() - userTargetPosition.getExtendo()) * EXTENDO_CORRECTION_TARGET;
         }
 
 //        if (hangPower == 0 && !released.getHang()) {
@@ -206,7 +221,8 @@ public class Differential {
                 .add("Power 2", powers[2])
                 .add("Lift", prevRealPowers.getLift())
                 .add("Lift Ticks", BulkReader.getInstance().getLiftTicks())
-                .add("Lift Target", targetTicks.getLift());
+                .add("Lift Target", targetTicks.getLift())
+                .add("Lift USER Target", userTargetPosition.getLift());
 
     }
 }

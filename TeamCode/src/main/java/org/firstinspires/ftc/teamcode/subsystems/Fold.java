@@ -11,10 +11,11 @@ public class Fold {
     ServoImplEx fold;
 
     public static double FOLD_INIT = 0;
-    public static double FOLD_DRIVE = 0.92;
+    public static double FOLD_UP = 0.25;
+    public static double FOLD_DRIVE = 0.95;
 
     // auto positions top to bottom
-    public static double[] autoPositions = {0.7, 75, 0.80, 0.85, FOLD_DRIVE, FOLD_INIT};
+    public static double[] autoPositions = {0.7, 0.75, 0.80, 0.9, FOLD_DRIVE, FOLD_DRIVE};
 
     public Fold(HardwareMap hardwareMap) {
         fold = hardwareMap.get(ServoImplEx.class, "fold");

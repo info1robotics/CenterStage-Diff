@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Pivot;
 @TeleOp(name = "teleop pur teoretic smr mama")
 public class Teleop extends LinearOpMode {
 
-    public static final long IGNORE_LIFT_FOR_MS = 150;
+    public static final long IGNORE_LIFT_FOR_MS = 300;
     private long msUntilIgnoreLift = System.currentTimeMillis();
 
     ActionQueue actionQueue = new ActionQueue();
@@ -74,9 +74,9 @@ public class Teleop extends LinearOpMode {
             double rightStickY = -gamepad2.right_stick_y;
 
             if (leftStickY > 0.06) {
-                intake.setPower(Math.min(leftStickY, 0.7));
+                intake.setPower(Math.max(leftStickY, 0.7));
             } else if (leftStickY < -0.06) {
-                intake.setPower(Math.max(-0.7, leftStickY));
+                intake.setPower(Math.min(-0.7, leftStickY));
             } else {
                 intake.setPower(0.0);
             }

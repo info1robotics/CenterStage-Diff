@@ -17,11 +17,11 @@ import org.openftc.easyopencv.OpenCvPipeline;
 @Config
 public class TSEDetectionPipeline extends OpenCvPipeline {
     static final Scalar BLUE = new Scalar(0, 0, 255);
-    public static boolean debug = false;
+    public static boolean debug = true;
     static Scalar lowerBlue = new Scalar(0, 0, 20);
     static Scalar upperBlue = new Scalar(5, 107, 255);
     static Scalar lowerRed = new Scalar(50, 0, 0);
-    static Scalar upperRed = new Scalar(170, 40, 40);
+    static Scalar upperRed = new Scalar(180, 60, 60);
     Scalar lowerConstraint;
     Scalar upperConstraint;
     Rect left, center, right;
@@ -38,7 +38,7 @@ public class TSEDetectionPipeline extends OpenCvPipeline {
             case RED_RIGHT:
                 left = new Rect(1, 38, 125, 265);
                 center = new Rect(171, 48, 225, 265);
-                right = new Rect(418, 38, 125, 265);
+                right = new Rect(448, 38, 125, 265);
                 break;
             case BLUE_LEFT:
                 left = new Rect(114, 38, 125, 285);
@@ -79,7 +79,7 @@ public class TSEDetectionPipeline extends OpenCvPipeline {
                 region3 = new Mat(input, right);
 
                 int sel1 = Core.countNonZero(region1);
-                int sel2 = Core.countNonZero(region2);
+                int sel2 = (int) (Core.countNonZero(region2) * 1.25);
                 int sel3 = Core.countNonZero(region3);
 
                 Log.getInstance()
@@ -100,6 +100,7 @@ public class TSEDetectionPipeline extends OpenCvPipeline {
                 region2.release();
                 region3.release();
             } else {
+
                 Imgproc.rectangle(input, left, BLUE, 2);
                 Imgproc.rectangle(input, center, BLUE, 2);
                 Imgproc.rectangle(input, right, BLUE, 2);

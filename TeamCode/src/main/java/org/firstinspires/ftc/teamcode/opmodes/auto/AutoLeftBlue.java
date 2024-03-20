@@ -27,9 +27,9 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "Red Right")
-public class AutoRightRed extends AutoBase {
-    static Pose2d startPose = p(TILE_SIZE * 0.5 + 3.15, -TILE_SIZE * 3 + 18, rad(91.5));
+@Autonomous(name = "Blue Left")
+public class AutoLeftBlue extends AutoBase {
+    static Pose2d startPose = p(TILE_SIZE * 0.5 + 3.15, TILE_SIZE * 3 - 18, rad(91.5));
 
     void detectionSeq() {
         actionQueue.add(new ScheduledRunnable(pivot::setScore, 0, "pivot"));
@@ -48,48 +48,47 @@ public class AutoRightRed extends AutoBase {
     public void onInit() {
         drive.setPoseEstimate(startPose);
         TrajectorySequence detectionLeft = drive.trajectorySequenceBuilder(startPose)
-                .splineTo(v(13.4, -26), rad(HEADING_TO_BACKDROP))
+                .splineTo(v(13.4, 26), rad(HEADING_TO_BACKDROP))
                 .relativeTemporalMarker(-0.33, () -> {
                     intake.setPower(-0.4);
                 })
                 .relativeTemporalMarker(0.3, intake::stop)
                 .waitSeconds(0.4)
-                .splineToConstantHeading(v(49.2, -23.3), rad(HEADING_TO_BACKDROP))
+                .splineToConstantHeading(v(49.2, 23.3), rad(HEADING_TO_BACKDROP))
                 .relativeTemporalMarker(-1.6, dropDetectionSequence)
                 .relativeTemporalMarker(-0.2, claw::open)
                 .build();
 
         TrajectorySequence detectionMid = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(p(31, -14.5, HEADING_TO_BACKDROP))
-                .relativeTemporalMarker(0.3, () -> intake.setPower(-0.4))
-                .waitSeconds(0.1)
-                .lineToLinearHeading(p(24, -14.5, HEADING_TO_BACKDROP))
-                .waitSeconds(0.1)
+//                .addSpatialMarker(v(25.0, -16.3), () -> {
+//                    intake.setPower(-0.5);
+//                })
+                .lineToLinearHeading(p(31, 14.9, HEADING_TO_BACKDROP))
+                .relativeTemporalMarker(0.3, () -> intake.setPower(-0.5))
+                .waitSeconds(0.2)
+                .lineToLinearHeading(p(24, 14.9, HEADING_TO_BACKDROP))
+                .waitSeconds(0.3)
                 .run(this::detectionSeq)
-                .relativeTemporalMarker(0.2, () -> {
+                .relativeTemporalMarker(0.1, () -> {
                     intake.setPower(0);
                 })
-                .splineToConstantHeading(v(49, -27.3), rad(HEADING_TO_BACKDROP))
+                .splineToConstantHeading(v(49, 27.3), rad(HEADING_TO_BACKDROP))
                 .relativeTemporalMarker(0.1, claw::open)
                 .waitSeconds(0.1)
                 .build();
 
         TrajectorySequence detectionRight = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(p(37, -17.5, HEADING_TO_BACKDROP))
-                .relativeTemporalMarker(0.03, () -> {
-                    intake.setPower(-0.4);
+                .splineToSplineHeading(p(25.5, 40.5, HEADING_TO_BLUE), rad(HEADING_TO_BACKDROP))
+                .relativeTemporalMarker(-0.47, () -> {
+                    intake.setPower(0.8);
                 })
-                .waitSeconds(0.1)
-                .lineToLinearHeading(p(30, -17.5, HEADING_TO_BACKDROP))
-                .waitSeconds(0.1)
-                .relativeTemporalMarker(0.3, this::detectionSeq)
                 .relativeTemporalMarker(0.3, () -> {
                     intake.setPower(0);
                 })
-                .waitSeconds(0.7)
-                .splineToConstantHeading(v(49, -31.6), rad(HEADING_TO_BACKDROP))
-                .relativeTemporalMarker(0.1, claw::open)
-                .waitSeconds(0.1)
+                .waitSeconds(2)
+                .splineToSplineHeading(p(49.2, 35.8, HEADING_TO_BACKDROP), rad(HEADING_TO_BACKDROP))
+                .relativeTemporalMarker(-1.2, dropDetectionSequence)
+                .relativeTemporalMarker(-0.5, claw::open)
                 .build();
 
         Pose2d[] detectionEnds = {
@@ -117,12 +116,12 @@ public class AutoRightRed extends AutoBase {
                             joint.setCollect();
                             actionQueue.add(new ScheduledRunnable(cover::close, 500, "cover"));
                         })
-                        .splineToSplineHeading(p(17, -3, HEADING_TO_BACKDROP), rad(180))
+                        .splineToSplineHeading(p(17, 3, HEADING_TO_BACKDROP), rad(180))
                         .relativeTemporalMarker(-0.5, () -> {
                             diffy.targetTicks.setExtendo(Differential.EXTENDO_BOUND[1]);
                             fold.setPosition(Fold.FOLD_UP);
                         })
-                        .splineToSplineHeading(p(-17.85, -5 + offset, HEADING_TO_BACKDROP), rad(180))
+                        .splineToSplineHeading(p(-17.85, 5 + offset, HEADING_TO_BACKDROP), rad(180))
                         .relativeTemporalMarker(0, () -> {
                             intake.setPower(1);
                         })
@@ -149,7 +148,7 @@ public class AutoRightRed extends AutoBase {
 
                 // backdrop sequence
                 cyclesBuilder.setReversed(false)
-                        .lineToSplineHeading(p(20, -2, HEADING_TO_BACKDROP))
+                        .lineToSplineHeading(p(20, 2, HEADING_TO_BACKDROP))
                         .run(() -> {
                             actionQueue.add(new ScheduledRunnable(pivot::setScore, 0, "pivot"));
                             actionQueue.add(new ScheduledRunnable(joint::setTransition, 0, "joint"));
@@ -158,7 +157,7 @@ public class AutoRightRed extends AutoBase {
                             }, 200, "lift"));
                             actionQueue.add(new ScheduledRunnable(joint::setScore, 300, "joint"));
                         })
-                        .splineToConstantHeading(v(48.0, -30), Math.toRadians(HEADING_TO_BACKDROP))
+                        .splineToConstantHeading(v(48.0, 30), Math.toRadians(HEADING_TO_BACKDROP))
                         .waitSeconds(0.2)
                         .run(claw::open)
                         .waitSeconds(0.5);
@@ -173,7 +172,7 @@ public class AutoRightRed extends AutoBase {
                     pivot.setCollect();
                     joint.setCollect();
                 })
-                .splineToSplineHeading(p(40.5, -45.5, HEADING_TO_BLUE), rad(HEADING_TO_BACKDROP))
+                .splineToSplineHeading(p(40.5, 45.5, HEADING_TO_RED), rad(HEADING_TO_BACKDROP))
                 .build();
 
         startPos = AutoStartPos.RED_RIGHT;
@@ -181,11 +180,11 @@ public class AutoRightRed extends AutoBase {
                 conditional(() -> tsePosition == TSEPosition.LEFT, trajectorySequence(detectionLeft)),
                 conditional(() -> tsePosition == TSEPosition.CENTER, trajectorySequence(detectionMid)),
                 conditional(() -> tsePosition == TSEPosition.RIGHT, trajectorySequence(detectionRight)),
-                conditional(() -> full, serial(
-                        conditional(() -> tsePosition == TSEPosition.LEFT, trajectorySequence(cyclesTrajectories.get(0))),
-                        conditional(() -> tsePosition == TSEPosition.CENTER, trajectorySequence(cyclesTrajectories.get(1))),
-                        conditional(() -> tsePosition == TSEPosition.RIGHT, trajectorySequence(cyclesTrajectories.get(2)))
-                )),
+//                conditional(() -> full, serial(
+//                        conditional(() -> tsePosition == TSEPosition.LEFT, trajectorySequence(cyclesTrajectories.get(0))),
+//                        conditional(() -> tsePosition == TSEPosition.CENTER, trajectorySequence(cyclesTrajectories.get(1))),
+//                        conditional(() -> tsePosition == TSEPosition.RIGHT, trajectorySequence(cyclesTrajectories.get(2)))
+//                ))
                 trajectorySequence(park)
         );
     }

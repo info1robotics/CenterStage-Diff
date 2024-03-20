@@ -8,8 +8,8 @@ public class Joint {
     ServoImplEx joint;
 
     public static double JOINT_COLLECT = 0.7; // TODO: find positions
-    public static double JOINT_SCORE = 0.35;
-    public static double JOINT_TRANSITION = 0.95;
+    public static double JOINT_SCORE = 0.25;
+    public static double JOINT_TRANSITION = 0.9;
 
     public Joint(HardwareMap hardwareMap) {
         joint = hardwareMap.get(ServoImplEx.class, "joint");

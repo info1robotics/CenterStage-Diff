@@ -13,9 +13,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 @Autonomous(group = "Debug")
 @Config
 public class IntakeTest extends LinearOpMode {
-    public static boolean coverClosed = true;
-    public static boolean foldInit = true;
     public static double intakePower = 1;
+    public static double foldPos = 0.7;
 
 
     @Override
@@ -34,19 +33,7 @@ public class IntakeTest extends LinearOpMode {
 
 
         while (opModeIsActive() && !isStopRequested()) {
-
-            if (gamepadEx2.getButtonDown("a")) {
-                cover.toggle();
-            }
-
-            if (gamepadEx2.getButtonDown("dpad_up")) {
-                fold.setPosition(fold.getPosition() + 0.02);
-            } else if (gamepadEx2.getButtonDown("dpad_down")) {
-                fold.setPosition(fold.getPosition() - 0.02);
-            }
-
-//            if (foldInit) fold.setInit();
-//            else fold.setDrive();
+            fold.setPosition(foldPos);
 
             intake.setPower(intakePower);
 

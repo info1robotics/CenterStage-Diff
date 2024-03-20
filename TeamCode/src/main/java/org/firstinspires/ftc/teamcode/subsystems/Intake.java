@@ -22,4 +22,12 @@ public class Intake {
     public void stop() {
         intake.setPower(0);
     }
+
+    public void reverse() {
+        intake.setPower(-1);
+    }
+
+    public void take() {
+        intake.setPower(1);
+    }
 }
