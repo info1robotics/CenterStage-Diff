@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.common.AutoUtil.rad;
 import static org.firstinspires.ftc.teamcode.common.AutoUtil.v;
 import static org.firstinspires.ftc.teamcode.tasks.TaskBuilder.conditional;
 import static org.firstinspires.ftc.teamcode.tasks.TaskBuilder.serial;
+import static org.firstinspires.ftc.teamcode.tasks.TaskBuilder.trajectory;
 import static org.firstinspires.ftc.teamcode.tasks.TaskBuilder.trajectorySequence;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 
 @Autonomous(name = "Blue Left")
 public class AutoLeftBlue extends AutoBase {
-    static Pose2d startPose = p(TILE_SIZE * 0.5 + 3.15, TILE_SIZE * 3 - 18, rad(91.5));
+    static Pose2d startPose = p(TILE_SIZE * 0.5 + 3.15, TILE_SIZE * 3 - 18, rad(-91.5));
 
     void detectionSeq() {
         actionQueue.add(new ScheduledRunnable(pivot::setScore, 0, "pivot"));
@@ -48,13 +49,13 @@ public class AutoLeftBlue extends AutoBase {
     public void onInit() {
         drive.setPoseEstimate(startPose);
         TrajectorySequence detectionLeft = drive.trajectorySequenceBuilder(startPose)
-                .splineTo(v(13.4, 26), rad(HEADING_TO_BACKDROP))
+                .splineTo(v(10, 26), rad(-HEADING_TO_BACKDROP))
                 .relativeTemporalMarker(-0.33, () -> {
                     intake.setPower(-0.4);
                 })
                 .relativeTemporalMarker(0.3, intake::stop)
                 .waitSeconds(0.4)
-                .splineToConstantHeading(v(49.2, 23.3), rad(HEADING_TO_BACKDROP))
+                .splineToConstantHeading(v(48, 23.3), rad(-HEADING_TO_BACKDROP))
                 .relativeTemporalMarker(-1.6, dropDetectionSequence)
                 .relativeTemporalMarker(-0.2, claw::open)
                 .build();
@@ -63,30 +64,30 @@ public class AutoLeftBlue extends AutoBase {
 //                .addSpatialMarker(v(25.0, -16.3), () -> {
 //                    intake.setPower(-0.5);
 //                })
-                .lineToLinearHeading(p(31, 14.9, HEADING_TO_BACKDROP))
+                .lineToLinearHeading(p(31, 14.9, -HEADING_TO_BACKDROP))
                 .relativeTemporalMarker(0.3, () -> intake.setPower(-0.5))
                 .waitSeconds(0.2)
-                .lineToLinearHeading(p(24, 14.9, HEADING_TO_BACKDROP))
+                .lineToLinearHeading(p(24, 14.9, -HEADING_TO_BACKDROP))
                 .waitSeconds(0.3)
                 .run(this::detectionSeq)
                 .relativeTemporalMarker(0.1, () -> {
                     intake.setPower(0);
                 })
-                .splineToConstantHeading(v(49, 27.3), rad(HEADING_TO_BACKDROP))
+                .splineToConstantHeading(v(49, 27.3), rad(-HEADING_TO_BACKDROP))
                 .relativeTemporalMarker(0.1, claw::open)
                 .waitSeconds(0.1)
                 .build();
 
         TrajectorySequence detectionRight = drive.trajectorySequenceBuilder(startPose)
-                .splineToSplineHeading(p(25.5, 40.5, HEADING_TO_BLUE), rad(HEADING_TO_BACKDROP))
-                .relativeTemporalMarker(-0.47, () -> {
-                    intake.setPower(0.8);
-                })
+                .splineToSplineHeading(p(18, 35, HEADING_TO_BLUE), rad(-HEADING_TO_BACKDROP))
                 .relativeTemporalMarker(0.3, () -> {
+                    intake.setPower(-0.6);
+                })
+                .relativeTemporalMarker(0, () -> {
                     intake.setPower(0);
                 })
                 .waitSeconds(2)
-                .splineToSplineHeading(p(49.2, 35.8, HEADING_TO_BACKDROP), rad(HEADING_TO_BACKDROP))
+                .splineToSplineHeading(p(48, 30, -HEADING_TO_BACKDROP), rad(-HEADING_TO_BACKDROP))
                 .relativeTemporalMarker(-1.2, dropDetectionSequence)
                 .relativeTemporalMarker(-0.5, claw::open)
                 .build();
@@ -172,14 +173,16 @@ public class AutoLeftBlue extends AutoBase {
                     pivot.setCollect();
                     joint.setCollect();
                 })
-                .splineToSplineHeading(p(40.5, 45.5, HEADING_TO_RED), rad(HEADING_TO_BACKDROP))
+//                .splineToSplineHeading(p(40.5, 45.5, -HEADING_TO_BLUE), rad(-HEADING_TO_BACKDROP))
+                .lineTo(v(40.5,45.5))
                 .build();
 
-        startPos = AutoStartPos.RED_RIGHT;
+        startPos = AutoStartPos.BLUE_LEFT;
         task = serial(
-                conditional(() -> tsePosition == TSEPosition.LEFT, trajectorySequence(detectionLeft)),
-                conditional(() -> tsePosition == TSEPosition.CENTER, trajectorySequence(detectionMid)),
-                conditional(() -> tsePosition == TSEPosition.RIGHT, trajectorySequence(detectionRight)),
+                trajectorySequence(detectionRight),
+//                conditional(() -> tsePosition == TSEPosition.LEFT, trajectorySequence(detectionLeft)),
+//                conditional(() -> tsePosition == TSEPosition.CENTER, trajectorySequence(detectionMid)),
+//                conditional(() -> tsePosition == TSEPosition.RIGHT, trajectorySequence(detectionRight)),
 //                conditional(() -> full, serial(
 //                        conditional(() -> tsePosition == TSEPosition.LEFT, trajectorySequence(cyclesTrajectories.get(0))),
 //                        conditional(() -> tsePosition == TSEPosition.CENTER, trajectorySequence(cyclesTrajectories.get(1))),

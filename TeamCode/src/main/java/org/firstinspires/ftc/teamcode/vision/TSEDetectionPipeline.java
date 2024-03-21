@@ -17,11 +17,12 @@ import org.openftc.easyopencv.OpenCvPipeline;
 @Config
 public class TSEDetectionPipeline extends OpenCvPipeline {
     static final Scalar BLUE = new Scalar(0, 0, 255);
-    public static boolean debug = true;
-    static Scalar lowerBlue = new Scalar(0, 0, 20);
-    static Scalar upperBlue = new Scalar(5, 107, 255);
+    public static boolean debug = false;
+    static Scalar lowerBlue = new Scalar(0, 0, 60);
+    static Scalar upperBlue = new Scalar(25, 187, 255);
     static Scalar lowerRed = new Scalar(50, 0, 0);
     static Scalar upperRed = new Scalar(180, 60, 60);
+    private final AutoStartPos autoStartPos;
     Scalar lowerConstraint;
     Scalar upperConstraint;
     Rect left, center, right;
@@ -29,6 +30,7 @@ public class TSEDetectionPipeline extends OpenCvPipeline {
     private TSEPosition position = TSEPosition.LEFT;
 
     public TSEDetectionPipeline(AutoStartPos autoStartPos) {
+        this.autoStartPos = autoStartPos;
         switch (autoStartPos) {
             case RED_LEFT:
                 left = new Rect(114, 38, 239, 323);
@@ -41,8 +43,8 @@ public class TSEDetectionPipeline extends OpenCvPipeline {
                 right = new Rect(448, 38, 125, 265);
                 break;
             case BLUE_LEFT:
-                left = new Rect(114, 38, 125, 285);
-                center = new Rect(266, 38, 225, 285);
+                left = new Rect(160, 38, 125, 285);
+                center = new Rect(316, 38, 180, 285);
                 right = new Rect(508, 38, 125, 285);
                 break;
             case BLUE_RIGHT:
@@ -81,6 +83,7 @@ public class TSEDetectionPipeline extends OpenCvPipeline {
                 int sel1 = Core.countNonZero(region1);
                 int sel2 = (int) (Core.countNonZero(region2) * 1.25);
                 int sel3 = Core.countNonZero(region3);
+                if (autoStartPos == AutoStartPos.BLUE_LEFT) sel3 = 450;
 
                 Log.getInstance()
                         .add("Pixels Left", sel1)

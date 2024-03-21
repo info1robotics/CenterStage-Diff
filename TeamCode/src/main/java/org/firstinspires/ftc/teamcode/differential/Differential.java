@@ -117,7 +117,6 @@ public class Differential {
 
         prevRealPowers.setExtendo(power);
 
-        power = 0; // TODO: REMOVE LOCK !!!!
         powers[0] += power;
         powers[1] += power;
         powers[2] -= power;

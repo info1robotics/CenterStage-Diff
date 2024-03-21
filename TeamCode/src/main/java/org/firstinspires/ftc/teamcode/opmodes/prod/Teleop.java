@@ -32,7 +32,7 @@ public class Teleop extends LinearOpMode {
         GamepadEx gamepadEx1 = new GamepadEx(gamepad1);
         GamepadEx gamepadEx2 = new GamepadEx(gamepad2);
 
-        BulkReader bulkReader = new BulkReader(this.hardwareMap);
+        BulkReader bulkReader = new BulkReader(this.hardwareMap, false);
         Differential diffy = new Differential(this.hardwareMap);
 
         Drivetrain drive = new Drivetrain(this.hardwareMap);
@@ -53,9 +53,14 @@ public class Teleop extends LinearOpMode {
 
         new Thread(() -> {
             while (opModeIsActive() && !isStopRequested()) {
-//                if (!gamepad1.dpad_left && !gamepad1.dpad_right) {
+                if (!gamepad1.left_bumper && !gamepad1.right_bumper) {
                 drive.driveMecanum(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_trigger - gamepad1.left_trigger, 1);
-//                }
+                }
+                if (gamepad1.left_bumper) {
+                    drive.driveMecanum(0, -1, 0, 0.5);
+                } else if (gamepad1.right_bumper) {
+                    drive.driveMecanum(0, 1, 0, 0.5);
+                }
                 gamepadEx1.update();
             }
         }).start();
@@ -89,10 +94,10 @@ public class Teleop extends LinearOpMode {
 
             log.add("Right Stick Y", rightStickY);
 
-            if (gamepad2.dpad_up) {
-                exendoPower = 1;
-            } else if (gamepad2.dpad_down) {
-                exendoPower = -1;
+            if (gamepad2.start) {
+                // sign = + if dpad up else - dpad down
+                int sign = gamepadEx2.getButtonDown("dpad_up") ? 1 : (gamepadEx2.getButtonDown("dpad_down") ? -1 : 0);
+                diffy.targetTicks.setExtendo(diffy.targetTicks.getExtendo() + sign * 5000);
             }
 
             if (gamepadEx2.getButtonDown("bumper_left")) {

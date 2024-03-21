@@ -17,7 +17,7 @@ public class BulkReader {
     public static BulkReader getInstance() {
         return instance;
     }
-    public BulkReader(HardwareMap hardwareMap) {
+    public BulkReader(HardwareMap hardwareMap, boolean reset) {
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
         if (allHubs.get(0).isParent()) {
@@ -34,6 +34,17 @@ public class BulkReader {
         BulkReader.instance = this;
 
         read();
+        if (reset) {
+            resetTicks();
+        }
+    }
+
+    public BulkReader(HardwareMap hardwareMap) {
+        this(hardwareMap, true);
+    }
+
+
+    public void resetTicks() {
         startExtendoTicks = getExtendoTicks();
         startHangTicks = getHangTicks();
         startLiftTicks = getLiftTicks();
