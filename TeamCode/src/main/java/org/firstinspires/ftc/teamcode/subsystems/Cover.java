@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 public class Cover {
     ServoImplEx cover;
 
-    public static double COVER_CLOSED = 0.9;
+    public static double COVER_CLOSED = 0.8;
     public static double COVER_OPEN = 0.1;
     boolean open = false;
 

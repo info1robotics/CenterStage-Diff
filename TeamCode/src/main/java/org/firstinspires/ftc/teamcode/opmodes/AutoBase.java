@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.enums.TSEPosition;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Cover;
+import org.firstinspires.ftc.teamcode.subsystems.Drone;
 import org.firstinspires.ftc.teamcode.subsystems.Fold;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Joint;
@@ -36,6 +37,7 @@ public abstract class AutoBase extends LinearOpMode {
     public Cover cover;
     public Joint joint;
     public Intake intake;
+    public Drone drone;
     public Differential diffy;
     public SampleMecanumDrive drive;
     public Task task;
@@ -84,15 +86,17 @@ public abstract class AutoBase extends LinearOpMode {
         intake = new Intake(this.hardwareMap);
         fold = new Fold(this.hardwareMap);
         joint = new Joint(this.hardwareMap);
+        drone = new Drone(this.hardwareMap);
         cover = new Cover(this.hardwareMap);
         diffy = new Differential(this.hardwareMap);
         drive = new SampleMecanumDrive(this.hardwareMap);
 
-        fold.setInit();
+//        fold.setInit();
         cover.open();
         joint.setCollect();
         pivot.setCollect();
         claw.close();
+        drone.setPosition(1);
 
         onInit();
 
@@ -129,7 +133,7 @@ public abstract class AutoBase extends LinearOpMode {
         log.add("Final Detection", tsePosition.toString());
         log.tick();
 
-//        camera.closeCameraDeviceAsync(() -> {});
+        camera.closeCameraDeviceAsync(() -> {});
         onStart();
 
         fold.setPosition(Fold.FOLD_UP);

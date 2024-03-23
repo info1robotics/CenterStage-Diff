@@ -22,7 +22,7 @@ public class BulkReader {
 
         if (allHubs.get(0).isParent()) {
             controlHub = allHubs.get(0);
-            expansionHub = allHubs.get(1);
+                expansionHub = allHubs.get(1);
         } else {
             controlHub = allHubs.get(1);
             expansionHub = allHubs.get(0);

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Pivot;
 @Config
 @Autonomous(group = "Debug")
 public class PivotPositions extends LinearOpMode {
-    public static double pos = 0.0;
+    public static double pos = 0.1;
 
     @Override
     public void runOpMode() throws InterruptedException {

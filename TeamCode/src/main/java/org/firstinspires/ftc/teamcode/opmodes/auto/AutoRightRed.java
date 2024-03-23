@@ -109,48 +109,103 @@ public class AutoRightRed extends AutoBase {
                 int finalJ = j;
                 double offset = j * -0.4;
                 if (j == 2) offset = 0.2;
+//                cyclesBuilder.setReversed(true)
+//                        .run(() -> {
+//                            diffy.userTargetPosition.setLift(-1);
+//                            diffy.targetTicks.setLift(Differential.LIFT_BOUND[1]);
+//                            pivot.setCollect();
+//                            joint.setCollect();
+//                            actionQueue.add(new ScheduledRunnable(cover::close, 500, "cover"));
+//                        })
+//                        .splineToSplineHeading(p(17, -53, HEADING_TO_BACKDROP), rad(180))
+//                        .relativeTemporalMarker(-0.5, () -> {
+//                            diffy.targetTicks.setExtendo(Differential.EXTENDO_BOUND[1]);
+//                            fold.setPosition(Fold.FOLD_UP);
+//                        })
+//                        .splineToSplineHeading(p(-17.85, -53 + offset, HEADING_TO_BACKDROP), rad(180))
+//                        .relativeTemporalMarker(0, () -> {
+//                            intake.setPower(1);
+//                        })
+//                        .run(() -> {
+//                            long startDelay = 1000;
+//                            actionQueue.add(new ScheduledRunnable(() -> {
+//                                fold.setPosition(Fold.autoPositions[finalJ]);
+//                            }, startDelay, "firstFold"));
+//                            actionQueue.add(new ScheduledRunnable(() -> {
+//                                fold.setPosition(Fold.autoPositions[finalJ + 1]);
+//                            }, startDelay + 450, "secondFold"));
+//                            actionQueue.add(new ScheduledRunnable(intake::reverse, startDelay + 800));
+//                            actionQueue.add(new ScheduledRunnable(intake::take, startDelay + 900));
+//                            actionQueue.add(new ScheduledRunnable(() -> {
+//                                fold.setPosition(Fold.FOLD_UP);
+//                                claw.open();
+//                                diffy.targetTicks.setExtendo(Differential.EXTENDO_BOUND[0] - 4000);
+//                            }, startDelay + 1200, "finalStack"));
+//                            actionQueue.add(new ScheduledRunnable(intake::stop, startDelay + 2700));
+//                            actionQueue.add(new ScheduledRunnable(claw::close, startDelay + 2900));
+//                            actionQueue.add(new ScheduledRunnable(cover::open, startDelay + 3000));
+//                        })
+//                        .waitSeconds(2.9);
+//
+//                // backdrop sequence
+//                cyclesBuilder.setReversed(false)
+//                        .lineToSplineHeading(p(20, -2, HEADING_TO_BACKDROP))
+//                        .run(() -> {
+//                            actionQueue.add(new ScheduledRunnable(pivot::setScore, 0, "pivot"));
+//                            actionQueue.add(new ScheduledRunnable(joint::setTransition, 0, "joint"));
+//                            actionQueue.add(new ScheduledRunnable(() -> {
+//                                diffy.userTargetPosition.setLift(Lift.RANDOM_PIXEL_DROP);
+//                            }, 200, "lift"));
+//                            actionQueue.add(new ScheduledRunnable(joint::setScore, 300, "joint"));
+//                        })
+//                        .splineToConstantHeading(v(48.0, -30), Math.toRadians(HEADING_TO_BACKDROP))
+//                        .waitSeconds(0.2)
+//                        .run(claw::open)
+//                        .waitSeconds(0.5);
+
                 cyclesBuilder.setReversed(true)
                         .run(() -> {
                             diffy.userTargetPosition.setLift(-1);
                             diffy.targetTicks.setLift(Differential.LIFT_BOUND[1]);
-                            pivot.setCollect();
+                            pivot.setTransition();
                             joint.setCollect();
                             actionQueue.add(new ScheduledRunnable(cover::close, 500, "cover"));
                         })
-                        .splineToSplineHeading(p(17, -3, HEADING_TO_BACKDROP), rad(180))
-                        .relativeTemporalMarker(-0.5, () -> {
+                        .splineToSplineHeading(p(17, -50, HEADING_TO_BACKDROP), rad(180))
+                        .splineToSplineHeading(p(-24.85, -50, HEADING_TO_BACKDROP + rad(-28)), rad(180))
+                        .relativeTemporalMarker(0, () -> {
                             diffy.targetTicks.setExtendo(Differential.EXTENDO_BOUND[1]);
                             fold.setPosition(Fold.FOLD_UP);
-                        })
-                        .splineToSplineHeading(p(-17.85, -5 + offset, HEADING_TO_BACKDROP), rad(180))
-                        .relativeTemporalMarker(0, () -> {
                             intake.setPower(1);
                         })
                         .run(() -> {
                             long startDelay = 1000;
                             actionQueue.add(new ScheduledRunnable(() -> {
                                 fold.setPosition(Fold.autoPositions[finalJ]);
-                            }, startDelay, "firstFold"));
+                            }, startDelay -200, "firstFold"));
                             actionQueue.add(new ScheduledRunnable(() -> {
                                 fold.setPosition(Fold.autoPositions[finalJ + 1]);
-                            }, startDelay + 450, "secondFold"));
+                            }, startDelay + 450 -200, "secondFold"));
                             actionQueue.add(new ScheduledRunnable(intake::reverse, startDelay + 800));
                             actionQueue.add(new ScheduledRunnable(intake::take, startDelay + 900));
                             actionQueue.add(new ScheduledRunnable(() -> {
                                 fold.setPosition(Fold.FOLD_UP);
                                 claw.open();
-                                diffy.targetTicks.setExtendo(Differential.EXTENDO_BOUND[0] - 4000);
-                            }, startDelay + 1200, "finalStack"));
-                            actionQueue.add(new ScheduledRunnable(intake::stop, startDelay + 2700));
+                                diffy.targetTicks.setExtendo(Differential.EXTENDO_BOUND[0]);
+                            }, startDelay + 1500, "finalStack"));
+                            actionQueue.add(new ScheduledRunnable(pivot::setCollect, startDelay + 2700));
                             actionQueue.add(new ScheduledRunnable(claw::close, startDelay + 2900));
-                            actionQueue.add(new ScheduledRunnable(cover::open, startDelay + 3000));
+                            actionQueue.add(new ScheduledRunnable(cover::open, startDelay + 3300));
                         })
-                        .waitSeconds(2.9);
+                        .waitSeconds(3.3);
 
                 // backdrop sequence
                 cyclesBuilder.setReversed(false)
-                        .lineToSplineHeading(p(20, -2, HEADING_TO_BACKDROP))
-                        .run(() -> {
+                        .run(intake::reverse)
+                        .lineToSplineHeading(p(-24, -50.7, HEADING_TO_BACKDROP))
+                        .lineToSplineHeading(p(17, -50.7, HEADING_TO_BACKDROP))
+                        .relativeTemporalMarker(-0.7, intake::stop)
+                        .relativeTemporalMarker(-0.5, () -> {
                             actionQueue.add(new ScheduledRunnable(pivot::setScore, 0, "pivot"));
                             actionQueue.add(new ScheduledRunnable(joint::setTransition, 0, "joint"));
                             actionQueue.add(new ScheduledRunnable(() -> {
@@ -158,7 +213,7 @@ public class AutoRightRed extends AutoBase {
                             }, 200, "lift"));
                             actionQueue.add(new ScheduledRunnable(joint::setScore, 300, "joint"));
                         })
-                        .splineToConstantHeading(v(48.0, -30), Math.toRadians(HEADING_TO_BACKDROP))
+                        .splineToConstantHeading(v(46.0, -30), Math.toRadians(HEADING_TO_BACKDROP))
                         .waitSeconds(0.2)
                         .run(claw::open)
                         .waitSeconds(0.5);

@@ -10,14 +10,16 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 public class Pivot {
     ServoImplEx pivotLeft, pivotRight;
 
-    public static double PIVOT_COLLECT = 0.09;
+    public static double PIVOT_COLLECT = 0.084;
+    public static double PIVOT_TRANSITION = 0.1;
     public static double PIVOT_SCORE = 1;
     PivotState pivotState = PivotState.NONE;
 
     public enum PivotState {
         COLLECT,
         SCORE,
-        NONE
+        NONE,
+        TRANSITION
     }
 
     public Pivot(HardwareMap hardwareMap) {
@@ -41,6 +43,12 @@ public class Pivot {
         pivotLeft.setPosition(PIVOT_SCORE);
         pivotRight.setPosition(PIVOT_SCORE);
         pivotState = PivotState.SCORE;
+    }
+
+    public void setTransition() {
+        pivotLeft.setPosition(PIVOT_TRANSITION);
+        pivotRight.setPosition(PIVOT_TRANSITION);
+        pivotState = PivotState.TRANSITION;
     }
 
     public void setPosition(double position) {

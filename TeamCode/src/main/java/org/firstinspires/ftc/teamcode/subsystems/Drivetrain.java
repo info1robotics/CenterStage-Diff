@@ -84,29 +84,6 @@ public class Drivetrain {
         setDriveMotorPower(leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
     }
 
-    public void driveMecanumFieldCentric(double inAxial, double inLateral, double inYaw, double heading, double maxOutput) {
-
-        double modMaintainMotorRatio;
-
-        double inputAxial = (inAxial * maxOutput);
-        double inputLateral = (inLateral * maxOutput) * LATERAL_MULTIPLIER;
-        double inputYaw = (inYaw * maxOutput);
-
-        double botHeading = heading;
-
-        double adjLateral = inputLateral * Math.cos(botHeading) - inputAxial * Math.sin(botHeading);
-        double adjAxial = inputLateral * Math.sin(botHeading) + inputAxial * Math.cos(botHeading);
-
-        modMaintainMotorRatio = Math.max(Math.abs(inputAxial) + Math.abs(inputLateral) + Math.abs(inputYaw), 1);
-
-        double leftFrontPower = (adjAxial + adjLateral + inputYaw) / modMaintainMotorRatio;
-        double rightFrontPower = (adjAxial - adjLateral - inputYaw) / modMaintainMotorRatio;
-        double leftBackPower = (adjAxial - adjLateral + inputYaw) / modMaintainMotorRatio;
-        double rightBackPower = (adjAxial + adjLateral - inputYaw) / modMaintainMotorRatio;
-
-        setDriveMotorPower(leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
-    }
-
     public void setDriveMotorPower(double leftFrontPower, double rightFrontPower, double leftBackPower, double rightBackPower) {
 
         fl.setPower(leftFrontPower);
