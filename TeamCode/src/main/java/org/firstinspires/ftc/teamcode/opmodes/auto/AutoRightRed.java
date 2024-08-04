@@ -228,7 +228,7 @@ public class AutoRightRed extends AutoBase {
                     pivot.setCollect();
                     joint.setCollect();
                 })
-                .splineToSplineHeading(p(40.5, -45.5, HEADING_TO_BLUE), rad(HEADING_TO_BACKDROP))
+                .splineToConstantHeading(v(40.5, -59.5), rad(HEADING_TO_BACKDROP))
                 .build();
 
         startPos = AutoStartPos.RED_RIGHT;
@@ -236,11 +236,11 @@ public class AutoRightRed extends AutoBase {
                 conditional(() -> tsePosition == TSEPosition.LEFT, trajectorySequence(detectionLeft)),
                 conditional(() -> tsePosition == TSEPosition.CENTER, trajectorySequence(detectionMid)),
                 conditional(() -> tsePosition == TSEPosition.RIGHT, trajectorySequence(detectionRight)),
-                conditional(() -> full, serial(
-                        conditional(() -> tsePosition == TSEPosition.LEFT, trajectorySequence(cyclesTrajectories.get(0))),
-                        conditional(() -> tsePosition == TSEPosition.CENTER, trajectorySequence(cyclesTrajectories.get(1))),
-                        conditional(() -> tsePosition == TSEPosition.RIGHT, trajectorySequence(cyclesTrajectories.get(2)))
-                )),
+//                conditional(() -> full, serial(
+//                        conditional(() -> tsePosition == TSEPosition.LEFT, trajectorySequence(cyclesTrajectories.get(0))),
+//                        conditional(() -> tsePosition == TSEPosition.CENTER, trajectorySequence(cyclesTrajectories.get(1))),
+//                        conditional(() -> tsePosition == TSEPosition.RIGHT, trajectorySequence(cyclesTrajectories.get(2)))
+//                )),
                 trajectorySequence(park)
         );
     }

@@ -31,7 +31,7 @@ public class Teleop extends LinearOpMode {
 
         GamepadEx gamepadEx1 = new GamepadEx(gamepad1);
         GamepadEx gamepadEx2 = new GamepadEx(gamepad2);
-
+        
         BulkReader bulkReader = new BulkReader(this.hardwareMap, false);
         Differential diffy = new Differential(this.hardwareMap);
 
@@ -51,9 +51,13 @@ public class Teleop extends LinearOpMode {
         joint.setCollect();
         claw.open();
 
+
+//        Differential.EXTENDO_BOUND[0] -= 2000;
+//        diffy.targetTicks.setExtendo(-2000);
+
         waitForStart();
 
-        boolean useExtendo = false;
+        boolean useExtendo = true;
 
         new Thread(() -> {
             while (opModeIsActive() && !isStopRequested()) {
@@ -72,7 +76,7 @@ public class Teleop extends LinearOpMode {
         double hangPower, liftPower, extendoPower;
 
         while (opModeIsActive() && !isStopRequested()) {
-            if (gamepad2.start && gamepad2.x) {
+            if (gamepad2.start && gamepadEx2.getButtonDown("x")) {
                 useExtendo = !useExtendo;
             }
 
@@ -81,7 +85,7 @@ public class Teleop extends LinearOpMode {
             extendoPower = 0;
 
             if (useExtendo) extendoPower = gamepad2.right_trigger - gamepad2.left_trigger;
-            else hangPower = -(gamepad2.right_trigger - gamepad2.left_trigger);
+            else hangPower = (gamepad2.right_trigger - gamepad2.left_trigger);
 
 
             bulkReader.read();
@@ -142,7 +146,7 @@ public class Teleop extends LinearOpMode {
             }
 
             if (liftPower > 0.1) {
-                if (BulkReader.getInstance().getLiftTicks() > -2300 && !pivot.is(Pivot.PivotState.SCORE)) {
+                if (!pivot.is(Pivot.PivotState.SCORE)) {
                     actionQueue.clear();
                     long delay = cover.isClosed() ? IGNORE_LIFT_FOR_MS : 0;
                     if (cover.isClosed()) {
@@ -164,7 +168,9 @@ public class Teleop extends LinearOpMode {
                     }
 
                     actionQueue.add(new ScheduledRunnable(pivot::setCollect, 0, "pivot"));
-                    actionQueue.add(new ScheduledRunnable(joint::setCollect, 0, "joint"));
+                    actionQueue.add(new ScheduledRunnable(joint::setTransition, 0, "joint"));
+                    actionQueue.add(new ScheduledRunnable(claw::open, 600, "joint"));
+                    actionQueue.add(new ScheduledRunnable(joint::setCollect, 700, "joint"));
                     actionQueue.add(new ScheduledRunnable(cover::close, 800, "cover"));
                 }
             }

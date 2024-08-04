@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Pivot;
 @Config
 @Autonomous(group = "Debug")
 public class PivotPositions extends LinearOpMode {
-    public static double pos = 0.1;
+    public static double pos = Pivot.PIVOT_SCORE;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -19,7 +19,7 @@ public class PivotPositions extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            pivot.setPosition(pos);
+            pivot.setScore();
         }
     }
 }

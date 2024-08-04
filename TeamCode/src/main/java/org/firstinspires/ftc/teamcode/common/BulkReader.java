@@ -5,13 +5,19 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.differential.Module;
+
 import java.util.List;
 
 public class BulkReader {
     LynxModule controlHub, expansionHub;
     public LynxModule.BulkData controlHubData, expansionHubData;
 
-    int startHangTicks = 0, startLiftTicks = 0, startExtendoTicks = 0;
+    public int startHangTicks = 0, startLiftTicks = 0, startExtendoTicks = 0;
+
+
+    public static int autoHangTicks = 0, autoLiftTicks = 0, autoExtendoTicks = 0;
+
 
     static BulkReader instance;
     public static BulkReader getInstance() {
@@ -36,6 +42,10 @@ public class BulkReader {
         read();
         if (reset) {
             resetTicks();
+        } else {
+            startHangTicks = autoHangTicks;
+            startLiftTicks = autoLiftTicks;
+            startExtendoTicks = autoExtendoTicks;
         }
     }
 
@@ -45,6 +55,10 @@ public class BulkReader {
 
 
     public void resetTicks() {
+        startExtendoTicks = 0;
+        startHangTicks = 0;
+        startLiftTicks = 0;
+
         startExtendoTicks = getExtendoTicks();
         startHangTicks = getHangTicks();
         startLiftTicks = getLiftTicks();

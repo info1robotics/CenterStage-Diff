@@ -20,8 +20,8 @@ public class Differential {
     static double LIFT_CORRECTION = 4 / 8000d;
     static double EXTENDO_CORRECTION = 2 / 8000d;
     static double HANG_CORRECTION = 4 / 8000d;
-    static double LIFT_DECEL_POS = -25000;
-    static double EXTENDO_DECEL_POS = 8000;
+    static double LIFT_DECEL_POS = -15000;
+    static double EXTENDO_DECEL_POS = 500;
 
     static double LIFT_CORRECTION_TARGET = 0.5 / 8192;
     static double EXTENDO_CORRECTION_TARGET = 0.5 / 8192;
@@ -214,6 +214,7 @@ public class Differential {
                 .add("Hang", hangPower)
                 .add("Extendo", prevRealPowers.getExtendo())
                 .add("Extendo Ticks", BulkReader.getInstance().getExtendoTicks())
+                .add("Blk Start Extendo", BulkReader.getInstance().startExtendoTicks)
                 .add("Extendo Target", targetTicks.getExtendo())
                 .add("Power 0", powers[0])
                 .add("Power 1", powers[1])
@@ -221,7 +222,9 @@ public class Differential {
                 .add("Lift", prevRealPowers.getLift())
                 .add("Lift Ticks", BulkReader.getInstance().getLiftTicks())
                 .add("Lift Target", targetTicks.getLift())
-                .add("Lift USER Target", userTargetPosition.getLift());
+                .add("Lift USER Target", userTargetPosition.getLift())
+                .add("Auto Extendo Offset", BulkReader.autoExtendoTicks)
+                .add("Auto Lift Offset", BulkReader.autoLiftTicks);
 
     }
 }

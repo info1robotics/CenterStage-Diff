@@ -180,11 +180,11 @@ public class AutoLeftBlue extends AutoBase {
                 conditional(() -> tsePosition == TSEPosition.LEFT, trajectorySequence(detectionLeft)),
                 conditional(() -> tsePosition == TSEPosition.CENTER, trajectorySequence(detectionMid)),
                 conditional(() -> tsePosition == TSEPosition.RIGHT, trajectorySequence(detectionRight)),
-                conditional(() -> full, serial(
-                        conditional(() -> tsePosition == TSEPosition.LEFT, trajectorySequence(cyclesTrajectories.get(0))),
-                        conditional(() -> tsePosition == TSEPosition.CENTER, trajectorySequence(cyclesTrajectories.get(1))),
-                        conditional(() -> tsePosition == TSEPosition.RIGHT, trajectorySequence(cyclesTrajectories.get(2)))
-                )),
+//                conditional(() -> full, serial(
+//                        conditional(() -> tsePosition == TSEPosition.LEFT, trajectorySequence(cyclesTrajectories.get(0))),
+//                        conditional(() -> tsePosition == TSEPosition.CENTER, trajectorySequence(cyclesTrajectories.get(1))),
+//                        conditional(() -> tsePosition == TSEPosition.RIGHT, trajectorySequence(cyclesTrajectories.get(2)))
+//                )),
                 trajectorySequence(park)
         );
     }

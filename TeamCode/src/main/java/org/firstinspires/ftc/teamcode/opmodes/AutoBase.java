@@ -91,6 +91,9 @@ public abstract class AutoBase extends LinearOpMode {
         diffy = new Differential(this.hardwareMap);
         drive = new SampleMecanumDrive(this.hardwareMap);
 
+        BulkReader.autoLiftTicks = bulkReader.startLiftTicks;
+        BulkReader.autoExtendoTicks = bulkReader.startExtendoTicks;
+
 //        fold.setInit();
         cover.open();
         joint.setCollect();
@@ -110,8 +113,11 @@ public abstract class AutoBase extends LinearOpMode {
         enableVision();
         while (!isStarted() && !isStopRequested()) {
             bulkReader.read();
+            diffy.reset();
+
             log.add("A/X for Full");
             log.add("B/O for Detection");
+
             if (gamepad1.a) {
                 full = true;
             }
@@ -126,8 +132,10 @@ public abstract class AutoBase extends LinearOpMode {
 
             tsePosition = pipeline.getAnalysis();
 
-            onInitTick();
             log.tick();
+            diffy.tick(0, 0, 0);
+            diffy.update();
+            onInitTick();
         }
 
         log.add("Final Detection", tsePosition.toString());

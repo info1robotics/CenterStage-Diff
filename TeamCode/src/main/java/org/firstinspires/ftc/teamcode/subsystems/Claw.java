@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Config
 public class Claw {
     Servo clawLeft, clawRight;
 
     static double CLAW_LEFT_OPEN = 1;
-    static double CLAW_LEFT_CLOSE = 1 - 0.48;
+    static double CLAW_LEFT_CLOSE = 1 - 0.38;
     static double CLAW_RIGHT_OPEN = 0;
     static double CLAW_RIGHT_CLOSE = 0.39;
 
