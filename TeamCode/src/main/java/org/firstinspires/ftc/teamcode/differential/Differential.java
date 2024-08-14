@@ -115,6 +115,8 @@ public class Differential {
             }
         }
 
+        power = 0; // disable extendo
+
         prevRealPowers.setExtendo(power);
 
         powers[0] += power;

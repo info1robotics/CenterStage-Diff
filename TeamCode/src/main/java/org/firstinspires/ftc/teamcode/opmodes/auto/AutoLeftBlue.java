@@ -115,7 +115,7 @@ public class AutoLeftBlue extends AutoBase {
                             actionQueue.add(new ScheduledRunnable(cover::close, 500, "cover"));
                         })
                         .splineToSplineHeading(p(17, 49.5, HEADING_TO_BACKDROP), rad(180))
-                        .splineToSplineHeading(p(-24.85, 49.5, HEADING_TO_BACKDROP + rad(28)), rad(180))
+                        .splineToSplineHeading(p(-54, 49.5, HEADING_TO_BACKDROP + rad(28)), rad(180))
                         .relativeTemporalMarker(0, () -> {
                             diffy.targetTicks.setExtendo(Differential.EXTENDO_BOUND[1]);
                             fold.setPosition(Fold.FOLD_UP);

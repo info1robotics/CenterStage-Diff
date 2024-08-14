@@ -172,7 +172,7 @@ public class AutoRightRed extends AutoBase {
                             actionQueue.add(new ScheduledRunnable(cover::close, 500, "cover"));
                         })
                         .splineToSplineHeading(p(17, -50, HEADING_TO_BACKDROP), rad(180))
-                        .splineToSplineHeading(p(-24.85, -50, HEADING_TO_BACKDROP + rad(-28)), rad(180))
+                        .splineToSplineHeading(p(-54, -50, HEADING_TO_BACKDROP + rad(-28)), rad(180))
                         .relativeTemporalMarker(0, () -> {
                             diffy.targetTicks.setExtendo(Differential.EXTENDO_BOUND[1]);
                             fold.setPosition(Fold.FOLD_UP);
