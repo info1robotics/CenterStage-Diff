@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.tasks;
 
 import org.firstinspires.ftc.teamcode.opmodes.AutoBase;
 
+
 public abstract class Task {
     public boolean isFinished() {
         return state == State.FINISHED;
@@ -10,6 +11,7 @@ public abstract class Task {
     public boolean isRunning() {
         return state == State.RUNNING;
     }
+
 
     public enum State {
         DEFAULT,

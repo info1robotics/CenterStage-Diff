@@ -24,10 +24,12 @@ public class Drivetrain {
         bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        fl.setDirection(DcMotorSimple.Direction.REVERSE);
-        bl.setDirection(DcMotorSimple.Direction.REVERSE);
-        br.setDirection(DcMotorSimple.Direction.FORWARD);
         fr.setDirection(DcMotorSimple.Direction.FORWARD);
+        br.setDirection(DcMotorSimple.Direction.FORWARD);
+
+
+        bl.setDirection(DcMotorSimple.Direction.REVERSE);
+        fl.setDirection(DcMotorSimple.Direction.REVERSE);
 
         fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -36,19 +38,19 @@ public class Drivetrain {
 
 
         MotorConfigurationType motorConfigurationType = fr.getMotorType().clone();
-        motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+        motorConfigurationType.setAchieveableMaxRPMFraction(1);
         fr.setMotorType(motorConfigurationType);
 
         motorConfigurationType = fl.getMotorType().clone();
-        motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+        motorConfigurationType.setAchieveableMaxRPMFraction(1);
         fl.setMotorType(motorConfigurationType);
 
         motorConfigurationType = br.getMotorType().clone();
-        motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+        motorConfigurationType.setAchieveableMaxRPMFraction(1);
         br.setMotorType(motorConfigurationType);
 
         motorConfigurationType = bl.getMotorType().clone();
-        motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+        motorConfigurationType.setAchieveableMaxRPMFraction(1);
         bl.setMotorType(motorConfigurationType);
     }
 

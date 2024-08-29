@@ -39,7 +39,7 @@ public class TwoWheelLocaliser extends TwoTrackingWheelLocalizer {
     private final SampleMecanumDrive drive;
 
     private final Odometry parallelOdo = new Odometry(3, false);
-    private final Odometry perpendicularOdo = new Odometry(0, false);
+    private final Odometry perpendicularOdo = new Odometry(0, true);
 
     public TwoWheelLocaliser(HardwareMap hardwareMap, SampleMecanumDrive drive) {
         super(Arrays.asList(

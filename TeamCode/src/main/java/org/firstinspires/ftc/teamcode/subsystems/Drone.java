@@ -13,8 +13,12 @@ public class Drone {
     public void setPosition(double pos) {
         drone.setPosition(pos);
     }
-
+    //public void kill()
+    //{
+     //   drone.pwm;
+    //}
     public double getPosition() {
         return drone.getPosition();
     }
 }
+

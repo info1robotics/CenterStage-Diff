@@ -11,6 +11,7 @@ public class Pivot {
     ServoImplEx pivotLeft, pivotRight;
 
     public static double PIVOT_COLLECT = 0.084;
+    public static double PIVOT_PHASE=0.1;
     public static double PIVOT_TRANSITION = 0.1;
     public static double PIVOT_SCORE = 1;
     PivotState pivotState = PivotState.NONE;
@@ -19,7 +20,8 @@ public class Pivot {
         COLLECT,
         SCORE,
         NONE,
-        TRANSITION
+        TRANSITION,
+        PHASE
     }
 
     public Pivot(HardwareMap hardwareMap) {
@@ -49,6 +51,12 @@ public class Pivot {
         pivotLeft.setPosition(PIVOT_TRANSITION);
         pivotRight.setPosition(PIVOT_TRANSITION);
         pivotState = PivotState.TRANSITION;
+    }
+    public void setPhase()
+    {
+        pivotLeft.setPosition(PIVOT_PHASE);
+        pivotRight.setPosition(PIVOT_PHASE);
+        pivotState = PivotState.PHASE;
     }
 
     public void setPosition(double position) {

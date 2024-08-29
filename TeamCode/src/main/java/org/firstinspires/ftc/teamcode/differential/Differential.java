@@ -114,7 +114,6 @@ public class Differential {
                 power = 0;
             }
         }
-
         power = 0; // disable extendo
 
         prevRealPowers.setExtendo(power);
@@ -198,7 +197,6 @@ public class Differential {
         } else if (BulkReader.getInstance().getExtendoTicks() > EXTENDO_BOUND[1] && extendoPower > 0) {
             extendoPower = 0;
         }
-
 
         outputHang(hangPower);
         outputLift(liftPower);

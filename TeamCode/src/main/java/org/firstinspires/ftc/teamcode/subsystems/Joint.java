@@ -9,7 +9,8 @@ public class Joint {
 
     public static double JOINT_COLLECT = 0.7; // TODO: find positions
     public static double JOINT_SCORE = 0.25;
-    public static double JOINT_TRANSITION = 0.9;
+    public static double JOINT_PHASE=0.68;
+    public static double JOINT_TRANSITION = 1.0;
 
     public Joint(HardwareMap hardwareMap) {
         joint = hardwareMap.get(ServoImplEx.class, "joint");
@@ -21,6 +22,9 @@ public class Joint {
 
     public void setTransition() {
         joint.setPosition(JOINT_TRANSITION);
+    }
+    public void setPhase() {
+        joint.setPosition(JOINT_PHASE);
     }
 
     public void setScore() {

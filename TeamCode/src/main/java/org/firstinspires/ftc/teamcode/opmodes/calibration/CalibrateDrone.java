@@ -9,14 +9,17 @@ import org.firstinspires.ftc.teamcode.subsystems.Drone;
 @Config
 @Autonomous(group = "Calibration")
 public class CalibrateDrone extends LinearOpMode {
-    public static double pos = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
         Drone drone = new Drone(this.hardwareMap);
+        drone.setPosition(1);
         waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
-            drone.setPosition(pos);
+            if(gamepad2.dpad_up)
+                    drone.setPosition(1);
+            if(gamepad2.dpad_down)
+                    drone.setPosition(0);
         }
     }
 }

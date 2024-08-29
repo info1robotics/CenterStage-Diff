@@ -4,6 +4,7 @@ buildscript {
         maven {
             url = 'https://www.matthewo.tech/maven/'
         }
+
     }
     dependencies {
         classpath 'org.team11260:fast-load-plugin:0.1.2'

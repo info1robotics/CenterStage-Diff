@@ -17,7 +17,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 @Config
 public class TSEDetectionPipeline extends OpenCvPipeline {
     static final Scalar BLUE = new Scalar(0, 0, 255);
-    public static boolean debug = false;
+    public static boolean debug = false;//change to true if you want to calibrate the camera- else false
     static Scalar lowerBlue = new Scalar(0, 0, 60);
     static Scalar upperBlue = new Scalar(25, 187, 255);
     static Scalar lowerRed = new Scalar(50, 0, 0);
@@ -26,16 +26,19 @@ public class TSEDetectionPipeline extends OpenCvPipeline {
     Scalar lowerConstraint;
     Scalar upperConstraint;
     Rect left, center, right;
+    Mat pic;
     Mat region1, region2, region3;
-    private TSEPosition position = TSEPosition.LEFT;
+    private TSEPosition position = TSEPosition.RIGHT;
+
+    public int s1, s2, s3;
 
     public TSEDetectionPipeline(AutoStartPos autoStartPos) {
         this.autoStartPos = autoStartPos;
         switch (autoStartPos) {
             case RED_LEFT:
-                left = new Rect(114, 38, 239, 323);
-                center = new Rect(266, 38, 225, 323);
-                right = new Rect(508, 38, 239, 323);
+                left = new Rect(61, 38, 125, 265);
+                center = new Rect(252, 38, 225, 265);
+                right = new Rect(485, 38, 125, 265);
                 break;
             case RED_RIGHT:
                 left = new Rect(1, 38, 125, 265);
@@ -71,6 +74,7 @@ public class TSEDetectionPipeline extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input) {
         try {
+
             Imgproc.cvtColor(input, input, Imgproc.COLOR_RGBA2RGB);
 
             if (!debug) {
@@ -84,11 +88,11 @@ public class TSEDetectionPipeline extends OpenCvPipeline {
                 int sel2 = (int) (Core.countNonZero(region2) * 1.25);
                 int sel3 = Core.countNonZero(region3);
                 if (autoStartPos == AutoStartPos.BLUE_LEFT) sel3 = 450;
+                if (autoStartPos == AutoStartPos.RED_RIGHT) sel3 = 450;
 
-                Log.getInstance()
-                        .add("Pixels Left", sel1)
-                        .add("Pixels Mid", sel2)
-                        .add("Pixels Right", sel3);
+                s1 = sel1;
+                s2 = sel2;
+                s3 = sel3;
 
                 long max = Math.max(Math.max(sel1, sel2), sel3);
 

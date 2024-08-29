@@ -11,7 +11,7 @@ public class Claw {
     static double CLAW_LEFT_OPEN = 1;
     static double CLAW_LEFT_CLOSE = 1 - 0.38;
     static double CLAW_RIGHT_OPEN = 0;
-    static double CLAW_RIGHT_CLOSE = 0.39;
+    static double CLAW_RIGHT_CLOSE = 0.40;
 
     public Claw(HardwareMap hardwareMap) {
         clawLeft = hardwareMap.servo.get("clawLeft"); // When looking from the intake

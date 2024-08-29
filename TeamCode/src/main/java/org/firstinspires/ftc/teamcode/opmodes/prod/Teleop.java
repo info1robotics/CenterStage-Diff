@@ -31,7 +31,7 @@ public class Teleop extends LinearOpMode {
 
         GamepadEx gamepadEx1 = new GamepadEx(gamepad1);
         GamepadEx gamepadEx2 = new GamepadEx(gamepad2);
-        
+
         BulkReader bulkReader = new BulkReader(this.hardwareMap, false);
         Differential diffy = new Differential(this.hardwareMap);
 
@@ -47,7 +47,7 @@ public class Teleop extends LinearOpMode {
         fold.setDrive();
         cover.close();
         pivot.setCollect();
-        drone.setPosition(1);
+        //drone.setPosition(1);
         joint.setCollect();
         claw.open();
 
@@ -57,7 +57,7 @@ public class Teleop extends LinearOpMode {
 
         waitForStart();
 
-        boolean useExtendo = true;
+        boolean useExtendo = false;
 
         new Thread(() -> {
             while (opModeIsActive() && !isStopRequested()) {
@@ -110,77 +110,85 @@ public class Teleop extends LinearOpMode {
 
             if (gamepad2.y && gamepad2.start) {
                 drone.setPosition(0);
-            }
+                }
 
 
-            log.add("Right Stick Y", rightStickY);
+                log.add("Right Stick Y", rightStickY);
 
 
-            if (gamepad2.dpad_up) {
-                fold.raise();
-            } else if (gamepad2.dpad_down) {
-                fold.lower();
-            } else if (gamepad2.dpad_left) {
-                fold.setDrive();
-            } else if (gamepad2.dpad_right) {
-                fold.setInit();
-            }
+                if (gamepad2.dpad_up) {
+                    fold.raise();
+                } else if (gamepad2.dpad_down) {
+                    fold.lower();
+                } else if (gamepad2.dpad_left) {
+                    fold.setDrive();
+                } else if (gamepad2.dpad_right) {
+                    fold.setInit();
+                }
 
 
-            if (gamepadEx2.getButtonDown("bumper_left")) {
-                claw.toggle(Claw.Side.LEFT);
-            }
-            if (gamepadEx2.getButtonDown("bumper_right")) {
-                claw.toggle(Claw.Side.RIGHT);
-            }
+                if (gamepadEx2.getButtonDown("bumper_left")) {
+                    claw.toggle(Claw.Side.LEFT);
+                }
+                if (gamepadEx2.getButtonDown("bumper_right")) {
+                    claw.toggle(Claw.Side.RIGHT);
+                }
 
 
-            if (gamepadEx2.getButtonDown("a")) {
-                claw.open();
-            } else if (gamepadEx2.getButtonDown("b")) {
-                claw.close();
-            }
-
-            if (System.currentTimeMillis() < msUntilIgnoreLift) {
-                liftPower = 0;
-            }
-
-            if (liftPower > 0.1) {
-                if (!pivot.is(Pivot.PivotState.SCORE)) {
-                    actionQueue.clear();
-                    long delay = cover.isClosed() ? IGNORE_LIFT_FOR_MS : 0;
-                    if (cover.isClosed()) {
-                        cover.open();
-                        msUntilIgnoreLift = System.currentTimeMillis() + IGNORE_LIFT_FOR_MS;
-                    }
-
+                if (gamepadEx2.getButtonDown("a")) {
+                    claw.open();
+                } else if (gamepadEx2.getButtonDown("b")) {
                     claw.close();
-                    actionQueue.add(new ScheduledRunnable(pivot::setScore, delay, "pivot"));
-                    actionQueue.add(new ScheduledRunnable(joint::setTransition, delay, "joint"));
-                    actionQueue.add(new ScheduledRunnable(joint::setScore, 300 + delay, "joint"));
-                    actionQueue.add(new ScheduledRunnable(cover::close, 800 + delay, "cover"));
                 }
-            } else if (liftPower < -0.1) {
-                if (BulkReader.getInstance().getLiftTicks() > -15000 && !pivot.is(Pivot.PivotState.COLLECT)) {
-                    actionQueue.clear();
-                    if (cover.isClosed()) {
-                        cover.open();
+
+                if (System.currentTimeMillis() < msUntilIgnoreLift) {
+                    liftPower = 0;
+                }
+
+                if (liftPower > 0.1) {
+                    if (!pivot.is(Pivot.PivotState.SCORE)) {
+                        claw.close();
+                        sleep(300);
+                        actionQueue.clear();
+                        long delay = cover.isClosed() ? IGNORE_LIFT_FOR_MS : 0;
+                        if (cover.isClosed()) {
+                            cover.open();
+                            msUntilIgnoreLift = System.currentTimeMillis() + IGNORE_LIFT_FOR_MS;
+                        }
+
+                        sleep(300);
+                        actionQueue.add(new ScheduledRunnable(pivot::setScore, delay, "pivot"));
+                        actionQueue.add(new ScheduledRunnable(joint::setTransition, delay, "joint"));
+                        actionQueue.add(new ScheduledRunnable(joint::setScore, 300 + delay, "joint"));
+                        actionQueue.add(new ScheduledRunnable(cover::close, 800 + delay, "cover"));
                     }
+                } else if (liftPower < -0.1) {
+                    if (BulkReader.getInstance().getLiftTicks() > -15000 && !pivot.is(Pivot.PivotState.COLLECT)) {
+                        actionQueue.clear();
+                        sleep(250);
+                        if (cover.isClosed()) {
+                            cover.open();
+                        }
+                        actionQueue.add(new ScheduledRunnable(pivot::setCollect, 0, "pivot"));
+                        actionQueue.add(new ScheduledRunnable(joint::setTransition, 0, "joint"));
+                        actionQueue.add(new ScheduledRunnable(joint::setCollect, 200, "joint"));
+                        actionQueue.add(new ScheduledRunnable(cover::close, 1000, "cover"));
+                        actionQueue.add(new ScheduledRunnable(claw::open, 1400, "joint"));
 
-                    actionQueue.add(new ScheduledRunnable(pivot::setCollect, 0, "pivot"));
-                    actionQueue.add(new ScheduledRunnable(joint::setTransition, 0, "joint"));
-                    actionQueue.add(new ScheduledRunnable(claw::open, 600, "joint"));
-                    actionQueue.add(new ScheduledRunnable(joint::setCollect, 700, "joint"));
-                    actionQueue.add(new ScheduledRunnable(cover::close, 800, "cover"));
+                    }
                 }
+
+                double currentLift = BulkReader.getInstance().getLiftTicks();
+                if (currentLift < 10000 && liftPower < -0.1)
+                    liftPower = liftPower * 0.7;
+
+                diffy.tick(hangPower, liftPower, extendoPower);
+                diffy.update();
+
+                gamepadEx2.update();
+                actionQueue.tick();
+                log.tick();
             }
-
-            diffy.tick(hangPower, liftPower, extendoPower);
-            diffy.update();
-
-            gamepadEx2.update();
-            actionQueue.tick();
-            log.tick();
         }
-    }
+
 }

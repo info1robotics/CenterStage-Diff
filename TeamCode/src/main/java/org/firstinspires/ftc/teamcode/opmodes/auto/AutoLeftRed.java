@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import static org.firstinspires.ftc.teamcode.common.AutoConstants.HEADING_TO_BACKDROP;
@@ -10,10 +9,10 @@ import static org.firstinspires.ftc.teamcode.common.AutoUtil.rad;
 import static org.firstinspires.ftc.teamcode.common.AutoUtil.v;
 import static org.firstinspires.ftc.teamcode.tasks.TaskBuilder.conditional;
 import static org.firstinspires.ftc.teamcode.tasks.TaskBuilder.serial;
-import static org.firstinspires.ftc.teamcode.tasks.TaskBuilder.trajectory;
 import static org.firstinspires.ftc.teamcode.tasks.TaskBuilder.trajectorySequence;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.MarkerCallback;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -29,9 +28,9 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "Blue Left")
-public class AutoLeftBlue extends AutoBase {
-    static Pose2d startPose = p(TILE_SIZE * 0.5 + 3.15, TILE_SIZE * 3 - 18, rad(-91.5));
+@Autonomous(name = "Red Left")
+public class AutoLeftRed extends AutoBase {
+    static Pose2d startPose = p(-TILE_SIZE * 0.5 - 21.85, -TILE_SIZE * 3 + 18, Math.toRadians(91.5));
 
     void detectionSeq() {
         actionQueue.add(new ScheduledRunnable(pivot::setScore, 0, "pivot"));
@@ -50,46 +49,103 @@ public class AutoLeftBlue extends AutoBase {
     public void onInit() {
         drive.setPoseEstimate(startPose);
         TrajectorySequence detectionLeft = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(p(30, 17.5, HEADING_TO_BACKDROP))
+                .lineToLinearHeading(new Pose2d(-38,-30,Math.toRadians(140)))
+                .back(10)
+                .strafeRight(18)
+
+                /*
+                .lineToConstantHeading(new Vector2d(-TILE_SIZE-11, 27-TILE_SIZE-16.5))
                 .relativeTemporalMarker(0.03, () -> {
                     intake.setPower(-0.5);
                 })
-                .waitSeconds(0.15)
-                .relativeTemporalMarker(0.3, this::detectionSeq)
-                .relativeTemporalMarker(0.4, () -> {
-                    intake.setPower(0);
-                })
-                .waitSeconds(0.4)
-                .splineToConstantHeading(v(49, 36.0), rad(HEADING_TO_BACKDROP))
-                .relativeTemporalMarker(0.1, claw::open)
                 .waitSeconds(0.1)
+                .strafeRight(TILE_SIZE*3+23)
+                //
+
+                 */
+
+                /*
+                .splineTo(v(13.4, -26), rad(HEADING_TO_BACKDROP))
+                .relativeTemporalMarker(-0.33, () -> {
+                    intake.setPower(-0.4);
+                })
+                .relativeTemporalMarker(0.3, intake::stop)
+                .waitSeconds(0.4)
+                .splineToConstantHeading(v(49.2, -23.3), rad(HEADING_TO_BACKDROP))
+                .relativeTemporalMarker(-1.6, dropDetectionSequence)
+                .relativeTemporalMarker(-0.2, claw::open)
+                .run(pivot::setCollect)
+
+                 */
+                .waitSeconds(30)
                 .build();
 
         TrajectorySequence detectionMid = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(p(30, 14.5, HEADING_TO_BACKDROP))
+                .forward(TILE_SIZE+3)
+                .back(TILE_SIZE)
+                //.splineTo(new Vector2d(50.5,-34.5), Math.toRadians(HEADING_TO_BACKDROP))
+                /*
+                .turn(Math.toRadians(-90))
+                .forward(40)
+                .waitSeconds(0.1)
+                .splineToLinearHeading(new Pose2d(50.5,-34.5), Math.toRadians(HEADING_TO_BACKDROP))
+                .relativeTemporalMarker(-1.6, dropDetectionSequence)
+                .relativeTemporalMarker(-0.2, claw::open)
+                .run(pivot::setCollect)
+
+                 */
+
+                //
+
+
+                /*
+                .waitSeconds(1)
+                .lineToLinearHeading(p(31, -14.5, HEADING_TO_BACKDROP))
                 .relativeTemporalMarker(0.3, () -> intake.setPower(-0.4))
                 .waitSeconds(0.1)
-                .lineToLinearHeading(p(23, 14.5, HEADING_TO_BACKDROP))
+                .lineToLinearHeading(p(24, -14.5, HEADING_TO_BACKDROP))
                 .waitSeconds(0.1)
                 .run(this::detectionSeq)
                 .relativeTemporalMarker(0.2, () -> {
                     intake.setPower(0);
                 })
-                .splineToConstantHeading(v(49, 29.3), rad(HEADING_TO_BACKDROP))
+                .splineToConstantHeading(v(49, -27.3), rad(HEADING_TO_BACKDROP))
                 .relativeTemporalMarker(0.1, claw::open)
                 .waitSeconds(0.1)
+                .run(pivot::setCollect)
+
+                 */
+                .waitSeconds(30)
                 .build();
 
         TrajectorySequence detectionRight = drive.trajectorySequenceBuilder(startPose)
-                .splineTo(v(12.3, 26), rad(HEADING_TO_BACKDROP))
-                .relativeTemporalMarker(-0.33, () -> {
+                .lineToLinearHeading(new Pose2d(-32,-26,Math.toRadians(20)))
+                .forward(1.5)
+                .turn(Math.toRadians(-40))
+                .strafeLeft(5)
+
+
+
+                /*
+                .lineToLinearHeading(p(37, -17.5, HEADING_TO_BACKDROP))
+                .relativeTemporalMarker(0.03, () -> {
                     intake.setPower(-0.4);
                 })
-                .relativeTemporalMarker(0.6, intake::stop)
-                .waitSeconds(0.2)
-                .lineToConstantHeading(v(48.4, 22))
-                .relativeTemporalMarker(-1.6, dropDetectionSequence)
-                .relativeTemporalMarker(-0.2, claw::open)
+                .waitSeconds(0.1)
+                .lineToLinearHeading(p(30, -17.5, HEADING_TO_BACKDROP))
+                .waitSeconds(0.1)
+                .relativeTemporalMarker(0.3, this::detectionSeq)
+                .relativeTemporalMarker(0.3, () -> {
+                    intake.setPower(0);
+                })
+                .waitSeconds(0.7)
+                .splineToConstantHeading(v(49, -31.6), rad(HEADING_TO_BACKDROP))
+                .relativeTemporalMarker(0.1, claw::open)
+                .waitSeconds(0.1)
+                .run(pivot::setCollect)
+
+                 */
+                .waitSeconds(30)
                 .build();
 
         Pose2d[] detectionEnds = {
@@ -100,13 +156,69 @@ public class AutoLeftBlue extends AutoBase {
 
         ArrayList<TrajectorySequence> cyclesTrajectories = new ArrayList<>();
 
-        Differential.EXTENDO_BOUND[0] -= 4000;
 
         for (int i = 0; i < 3; i++) {
+            int finalI = i;
             TrajectorySequenceBuilder cyclesBuilder = drive.trajectorySequenceBuilder(detectionEnds[i]);
             int NUM_CYCLES = 2;
             for (int j = 0; j < NUM_CYCLES; j++) {
                 int finalJ = j;
+                double offset = j * -0.4;
+                if (j == 2) offset = 0.2;
+//                cyclesBuilder.setReversed(true)
+//                        .run(() -> {
+//                            diffy.userTargetPosition.setLift(-1);
+//                            diffy.targetTicks.setLift(Differential.LIFT_BOUND[1]);
+//                            pivot.setCollect();
+//                            joint.setCollect();
+//                            actionQueue.add(new ScheduledRunnable(cover::close, 500, "cover"));
+//                        })
+//                        .splineToSplineHeading(p(17, -53, HEADING_TO_BACKDROP), rad(180))
+//                        .relativeTemporalMarker(-0.5, () -> {
+//                            diffy.targetTicks.setExtendo(Differential.EXTENDO_BOUND[1]);
+//                            fold.setPosition(Fold.FOLD_UP);
+//                        })
+//                        .splineToSplineHeading(p(-17.85, -53 + offset, HEADING_TO_BACKDROP), rad(180))
+//                        .relativeTemporalMarker(0, () -> {
+//                            intake.setPower(1);
+//                        })
+//                        .run(() -> {
+//                            long startDelay = 1000;
+//                            actionQueue.add(new ScheduledRunnable(() -> {
+//                                fold.setPosition(Fold.autoPositions[finalJ]);
+//                            }, startDelay, "firstFold"));
+//                            actionQueue.add(new ScheduledRunnable(() -> {
+//                                fold.setPosition(Fold.autoPositions[finalJ + 1]);
+//                            }, startDelay + 450, "secondFold"));
+//                            actionQueue.add(new ScheduledRunnable(intake::reverse, startDelay + 800));
+//                            actionQueue.add(new ScheduledRunnable(intake::take, startDelay + 900));
+//                            actionQueue.add(new ScheduledRunnable(() -> {
+//                                fold.setPosition(Fold.FOLD_UP);
+//                                claw.open();
+//                                diffy.targetTicks.setExtendo(Differential.EXTENDO_BOUND[0] - 4000);
+//                            }, startDelay + 1200, "finalStack"));
+//                            actionQueue.add(new ScheduledRunnable(intake::stop, startDelay + 2700));
+//                            actionQueue.add(new ScheduledRunnable(claw::close, startDelay + 2900));
+//                            actionQueue.add(new ScheduledRunnable(cover::open, startDelay + 3000));
+//                        })
+//                        .waitSeconds(2.9);
+//
+//                // backdrop sequence
+//                cyclesBuilder.setReversed(false)
+//                        .lineToSplineHeading(p(20, -2, HEADING_TO_BACKDROP))
+//                        .run(() -> {
+//                            actionQueue.add(new ScheduledRunnable(pivot::setScore, 0, "pivot"));
+//                            actionQueue.add(new ScheduledRunnable(joint::setTransition, 0, "joint"));
+//                            actionQueue.add(new ScheduledRunnable(() -> {
+//                                diffy.userTargetPosition.setLift(Lift.RANDOM_PIXEL_DROP);
+//                            }, 200, "lift"));
+//                            actionQueue.add(new ScheduledRunnable(joint::setScore, 300, "joint"));
+//                        })
+//                        .splineToConstantHeading(v(48.0, -30), Math.toRadians(HEADING_TO_BACKDROP))
+//                        .waitSeconds(0.2)
+//                        .run(claw::open)
+//                        .waitSeconds(0.5);
+
                 cyclesBuilder.setReversed(true)
                         .run(() -> {
                             diffy.userTargetPosition.setLift(-1);
@@ -115,8 +227,8 @@ public class AutoLeftBlue extends AutoBase {
                             joint.setCollect();
                             actionQueue.add(new ScheduledRunnable(cover::close, 500, "cover"));
                         })
-                        .splineToSplineHeading(p(17, 49.5, HEADING_TO_BACKDROP), rad(180))
-                        .splineToSplineHeading(p(-54, 49.5, HEADING_TO_BACKDROP + rad(28)), rad(180))
+                        .splineToSplineHeading(p(17, -50, HEADING_TO_BACKDROP), rad(180))
+                        .splineToSplineHeading(p(-54, -50, HEADING_TO_BACKDROP + rad(-28)), rad(180))
                         .relativeTemporalMarker(0, () -> {
                             diffy.targetTicks.setExtendo(Differential.EXTENDO_BOUND[1]);
                             fold.setPosition(Fold.FOLD_UP);
@@ -126,10 +238,10 @@ public class AutoLeftBlue extends AutoBase {
                             long startDelay = 1000;
                             actionQueue.add(new ScheduledRunnable(() -> {
                                 fold.setPosition(Fold.autoPositions[finalJ]);
-                            }, startDelay, "firstFold"));
+                            }, startDelay -200, "firstFold"));
                             actionQueue.add(new ScheduledRunnable(() -> {
                                 fold.setPosition(Fold.autoPositions[finalJ + 1]);
-                            }, startDelay + 450, "secondFold"));
+                            }, startDelay + 450 -200, "secondFold"));
                             actionQueue.add(new ScheduledRunnable(intake::reverse, startDelay + 800));
                             actionQueue.add(new ScheduledRunnable(intake::take, startDelay + 900));
                             actionQueue.add(new ScheduledRunnable(() -> {
@@ -146,8 +258,8 @@ public class AutoLeftBlue extends AutoBase {
                 // backdrop sequence
                 cyclesBuilder.setReversed(false)
                         .run(intake::reverse)
-                        .lineToSplineHeading(p(-24, 50, HEADING_TO_BACKDROP))
-                        .lineToSplineHeading(p(17, 50, HEADING_TO_BACKDROP))
+                        .lineToSplineHeading(p(-24, -50.7, HEADING_TO_BACKDROP))
+                        .lineToSplineHeading(p(17, -50.7, HEADING_TO_BACKDROP))
                         .relativeTemporalMarker(-0.7, intake::stop)
                         .relativeTemporalMarker(-0.5, () -> {
                             actionQueue.add(new ScheduledRunnable(pivot::setScore, 0, "pivot"));
@@ -157,7 +269,7 @@ public class AutoLeftBlue extends AutoBase {
                             }, 200, "lift"));
                             actionQueue.add(new ScheduledRunnable(joint::setScore, 300, "joint"));
                         })
-                        .splineToConstantHeading(v(46.0, 30), Math.toRadians(HEADING_TO_BACKDROP))
+                        .splineToConstantHeading(v(46.0, -30), Math.toRadians(HEADING_TO_BACKDROP))
                         .waitSeconds(0.2)
                         .run(claw::open)
                         .waitSeconds(0.5);
@@ -172,11 +284,10 @@ public class AutoLeftBlue extends AutoBase {
                     pivot.setCollect();
                     joint.setCollect();
                 })
-//                .splineToSplineHeading(p(40.5, 45.5, -HEADING_TO_BLUE), rad(-HEADING_TO_BACKDROP))
-                .lineTo(v(40.5,54.5))
+                .splineToConstantHeading(v(40.5, -59.5), rad(HEADING_TO_BACKDROP))
                 .build();
 
-        startPos = AutoStartPos.BLUE_LEFT;
+        startPos = AutoStartPos.RED_LEFT;
         task = serial(
                 conditional(() -> tsePosition == TSEPosition.LEFT, trajectorySequence(detectionLeft)),
                 conditional(() -> tsePosition == TSEPosition.CENTER, trajectorySequence(detectionMid)),

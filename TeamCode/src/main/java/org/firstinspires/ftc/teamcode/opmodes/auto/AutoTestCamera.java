@@ -11,10 +11,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class AutoTestCamera extends AutoBase {
     @Override
     public void onInit() {
-        startPos = AutoStartPos.BLUE_LEFT;
+        startPos = AutoStartPos.RED_LEFT;
 
         task = serial(
                 log("Hello, world!")
         );
+
     }
 }

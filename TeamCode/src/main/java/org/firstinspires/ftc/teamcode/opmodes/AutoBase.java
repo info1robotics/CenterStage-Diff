@@ -27,8 +27,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public abstract class AutoBase extends LinearOpMode {
     public static State state = State.DEFAULT;
     static AutoBase instance = null;
-    public AutoStartPos startPos = AutoStartPos.UNKNOWN;
-    public TSEPosition tsePosition = TSEPosition.LEFT;
+    public AutoStartPos startPos = AutoStartPos.UNKNOWN;//verify before match
+    public TSEPosition tsePosition = TSEPosition.RIGHT;
     public OpenCvCamera camera;
     public TSEDetectionPipeline pipeline;
     public Pivot pivot;
@@ -99,7 +99,7 @@ public abstract class AutoBase extends LinearOpMode {
         joint.setCollect();
         pivot.setCollect();
         claw.close();
-        drone.setPosition(1);
+        //drone.setPosition(1);
 
         onInit();
 
@@ -131,6 +131,7 @@ public abstract class AutoBase extends LinearOpMode {
             }
 
             tsePosition = pipeline.getAnalysis();
+            log.add("POSITION",tsePosition.toString());
 
             log.tick();
             diffy.tick(0, 0, 0);
